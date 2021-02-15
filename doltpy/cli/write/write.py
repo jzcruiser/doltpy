@@ -34,6 +34,19 @@ def write_file(
     commit_message: Optional[str] = None,
     commit_date: Optional[datetime.datetime] = None,
 ):
+    """
+    Write a file to a Dolt table, currently restricted to CSV files.
+    :param dolt: an instance of `Dolt` representing the database to write to.
+    :param table: the name of the table to write to.
+    :param file_handle: a file handle for reading data to be imported.
+    :param filetype: the file format being imported, currently limited to CSV.
+    :param import_mode: one of "create", "force_create", "replace", "update".
+    :param primary_key: the primary key, applicable when import mode is "create".
+    :param commit: boolean flag indicating whether to create a commit for the write.
+    :param commit_message: a commit message to use when `commit` is `True`.
+    :param commit_date: override the date associated with the commit.
+    :return:
+    """
     def writer(filepath: str):
         with open(filepath, "w") as f:
             f.writelines(file_handle.readlines())
@@ -61,18 +74,17 @@ def write_columns(
     commit_date: Optional[datetime.datetime] = None,
 ):
     """
-
-    :param dolt:
-    :param table:
-    :param columns:
-    :param import_mode:
-    :param primary_key:
-    :param commit:
-    :param commit_message:
-    :param commit_date:
+    Write columnar formatted data to a Dolt table, and optinally create a commit.
+    :param dolt: an instance of `Dolt` representing the database to write to.
+    :param table: the name of the table to write to.
+    :param columns: a mapping of column names to values.
+    :param import_mode: one of "create", "force_create", "replace", "update".
+    :param primary_key: the primary key, applicable when import mode is "create".
+    :param commit: boolean flag indicating whether to create a commit for the write.
+    :param commit_message: a commit message to use when `commit` is `True`.
+    :param commit_date: override the date associated with the commit.
     :return:
     """
-
     def writer(filepath: str):
         if len(list(set(len(col) for col in columns.values()))) != 1:
             raise ValueError("Must pass columns of identical length")
@@ -106,18 +118,17 @@ def write_rows(
     commit_date: Optional[datetime.datetime] = None,
 ):
     """
-
-    :param dolt:
-    :param table:
-    :param rows:
-    :param import_mode:
-    :param primary_key:
-    :param commit:
-    :param commit_message:
-    :param commit_date:
+    Write a list of rows, represented by dictionaries, to a Dolt table. Optionally create a commit.
+    :param dolt: an instance of `Dolt` representing the database to write to.
+    :param table: the name of the table to write to.
+    :param rows: list of dictionaries, each representing a row mapping columns to values.
+    :param import_mode: one of "create", "force_create", "replace", "update".
+    :param primary_key: the primary key, applicable when import mode is "create".
+    :param commit: boolean flag indicating whether to create a commit for the write.
+    :param commit_message: a commit message to use when `commit` is `True`.
+    :param commit_date: override the date associated with the commit.
     :return:
     """
-
     def writer(filepath: str):
         with open(filepath, "w") as f:
             fieldnames: Set[str] = set()
@@ -151,18 +162,17 @@ def write_pandas(
     commit_date: Optional[datetime.datetime] = None,
 ):
     """
-
-    :param dolt:
-    :param table:
-    :param df:
-    :param import_mode:
-    :param primary_key:
-    :param commit:
-    :param commit_message:
-    :param commit_date:
+    Write a list of rows, represented by dictionaries, to a Dolt table. Optionally create a commit.
+    :param dolt: an instance of `Dolt` representing the database to write to.
+    :param table: the name of the table to write to.
+    :param df: the `pandas.DataFrame` to write.
+    :param import_mode: one of "create", "force_create", "replace", "update".
+    :param primary_key: the primary key, applicable when import mode is "create".
+    :param commit: boolean flag indicating whether to create a commit for the write.
+    :param commit_message: a commit message to use when `commit` is `True`.
+    :param commit_date: override the date associated with the commit.
     :return:
     """
-
     def writer(filepath: str):
         clean = df.dropna(subset=primary_key)
         clean.to_csv(filepath, index=False)

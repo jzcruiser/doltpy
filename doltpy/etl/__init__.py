@@ -11,4 +11,4 @@ from .loaders import (
     get_unique_key_table_writer,
     insert_unique_key,
 )
-from .wrappers import load_to_dolt, load_to_dolthub
+from .wrappers import load_to_dolt

@@ -51,25 +51,50 @@ Creates an index of hashes of the values of the primary keys in the table provid
 :return:
 
 
-### doltpy.sql.helpers.get_inserts_and_updates(engine: sqlalchemy.engine.base.Engine, table: sqlalchemy.sql.schema.Table, data: List[[dict](https://docs.python.org/3/library/stdtypes.html#dict)])
-
 ### doltpy.sql.helpers.hash_row_els(row: [dict](https://docs.python.org/3/library/stdtypes.html#dict), cols: List[[str](https://docs.python.org/3/library/stdtypes.html#str)])
 
-### doltpy.sql.helpers.infer_table_schema(metadata: sqlalchemy.sql.schema.MetaData, table_name: [str](https://docs.python.org/3/library/stdtypes.html#str), rows: Iterable[[dict](https://docs.python.org/3/library/stdtypes.html#dict)], primary_key: List[[str](https://docs.python.org/3/library/stdtypes.html#str)])
+### doltpy.sql.helpers.infer_table_schema(metadata: sqlalchemy.sql.schema.MetaData, table_name: [str](https://docs.python.org/3/library/stdtypes.html#str), rows: Iterable[[dict](https://docs.python.org/3/library/stdtypes.html#dict)], primary_key: Optional[List[[str](https://docs.python.org/3/library/stdtypes.html#str)]])
 ## doltpy.sql.sql module
 
 
-### class doltpy.sql.sql.DoltSQLContext()
+### class doltpy.sql.sql.DoltCommit(ref: [str](https://docs.python.org/3/library/stdtypes.html#str), ts: [datetime.datetime](https://docs.python.org/3/library/datetime.html#datetime.datetime), author: [str](https://docs.python.org/3/library/stdtypes.html#str), email: [str](https://docs.python.org/3/library/stdtypes.html#str), message: [str](https://docs.python.org/3/library/stdtypes.html#str), parent_or_parents: Optional[Union[[str](https://docs.python.org/3/library/stdtypes.html#str), Tuple[[str](https://docs.python.org/3/library/stdtypes.html#str), [str](https://docs.python.org/3/library/stdtypes.html#str)]]] = None)
+Bases: [`object`](https://docs.python.org/3/library/functions.html#object)
+
+Represents metadata about a commit, including a ref, timestamp, and author, to make it easier to sort and present
+to the user.
+
+
+#### append_merge_parent(other_merge_parent: [str](https://docs.python.org/3/library/stdtypes.html#str))
+
+#### author(: [str](https://docs.python.org/3/library/stdtypes.html#str))
+
+#### email(: [str](https://docs.python.org/3/library/stdtypes.html#str))
+
+#### is_merge()
+
+#### message(: [str](https://docs.python.org/3/library/stdtypes.html#str))
+
+#### parent_or_parents(: Optional[Union[[str](https://docs.python.org/3/library/stdtypes.html#str), Tuple[[str](https://docs.python.org/3/library/stdtypes.html#str), [str](https://docs.python.org/3/library/stdtypes.html#str)]]] = None)
+
+#### ref(: [str](https://docs.python.org/3/library/stdtypes.html#str))
+
+#### ts(: [datetime.datetime](https://docs.python.org/3/library/datetime.html#datetime.datetime))
+
+### class doltpy.sql.sql.DoltSQLContext(dolt: doltpy.cli.dolt.Dolt, server_config: doltpy.sql.sql.ServerConfig, engine: sqlalchemy.engine.base.Engine)
 Bases: [`object`](https://docs.python.org/3/library/functions.html#object)
 
 
-#### commit_tables(commit_message: [str](https://docs.python.org/3/library/stdtypes.html#str), table_or_tables: Optional[Union[[str](https://docs.python.org/3/library/stdtypes.html#str), List[[str](https://docs.python.org/3/library/stdtypes.html#str)]]] = None, allow_emtpy: [bool](https://docs.python.org/3/library/functions.html#bool) = False)
+#### commit_tables(commit_message: Optional[[str](https://docs.python.org/3/library/stdtypes.html#str)] = None, table_or_tables: Optional[Union[[str](https://docs.python.org/3/library/stdtypes.html#str), List[[str](https://docs.python.org/3/library/stdtypes.html#str)]]] = None, allow_emtpy: [bool](https://docs.python.org/3/library/functions.html#bool) = False)
+
+#### diff(from_commit: [str](https://docs.python.org/3/library/stdtypes.html#str), to_commit: [str](https://docs.python.org/3/library/stdtypes.html#str), table_or_tables: Union[[str](https://docs.python.org/3/library/stdtypes.html#str), List[[str](https://docs.python.org/3/library/stdtypes.html#str)]])
 
 #### dolt(: doltpy.cli.dolt.Dolt)
 
 #### engine(: sqlalchemy.engine.base.Engine)
 
 #### execute(sql: [str](https://docs.python.org/3/library/stdtypes.html#str), commit: [bool](https://docs.python.org/3/library/functions.html#bool) = False, commit_message: Optional[[str](https://docs.python.org/3/library/stdtypes.html#str)] = None, allow_emtpy: [bool](https://docs.python.org/3/library/functions.html#bool) = False)
+
+#### log()
 
 #### read_columns(table: [str](https://docs.python.org/3/library/stdtypes.html#str), as_of: Optional[[str](https://docs.python.org/3/library/stdtypes.html#str)] = None)
 
@@ -86,8 +111,6 @@ Bases: [`object`](https://docs.python.org/3/library/functions.html#object)
 #### server_config(: doltpy.sql.sql.ServerConfig)
 
 #### verify_connection()
-
-#### write_batch(table: sqlalchemy.sql.schema.Table, rows: List[[dict](https://docs.python.org/3/library/stdtypes.html#dict)], on_duplicate_key_update: [bool](https://docs.python.org/3/library/functions.html#bool))
 
 #### write_columns(table: [str](https://docs.python.org/3/library/stdtypes.html#str), columns: Mapping[[str](https://docs.python.org/3/library/stdtypes.html#str), List[Any]], on_duplicate_key_update: [bool](https://docs.python.org/3/library/functions.html#bool) = True, create_if_not_exists: [bool](https://docs.python.org/3/library/functions.html#bool) = False, primary_key: Optional[List[[str](https://docs.python.org/3/library/stdtypes.html#str)]] = None, commit: [bool](https://docs.python.org/3/library/functions.html#bool) = True, commit_message: Optional[[str](https://docs.python.org/3/library/stdtypes.html#str)] = None, commit_date: Optional[[datetime.datetime](https://docs.python.org/3/library/datetime.html#datetime.datetime)] = None, allow_empty: [bool](https://docs.python.org/3/library/functions.html#bool) = False, batch_size: [int](https://docs.python.org/3/library/functions.html#int) = 100000)
 
@@ -129,7 +152,31 @@ Stop the MySQL Server process this repo is running.
 :return:
 
 
-### class doltpy.sql.sql.ServerConfig(branch: Optional[[str](https://docs.python.org/3/library/stdtypes.html#str)] = None, config: Optional[[str](https://docs.python.org/3/library/stdtypes.html#str)] = None, host: [str](https://docs.python.org/3/library/stdtypes.html#str) = '127.0.0.1', port: [int](https://docs.python.org/3/library/functions.html#int) = 3306, user: Optional[[str](https://docs.python.org/3/library/stdtypes.html#str)] = None, password: Optional[[str](https://docs.python.org/3/library/stdtypes.html#str)] = None, timeout: Optional[[int](https://docs.python.org/3/library/functions.html#int)] = None, readonly: Optional[[bool](https://docs.python.org/3/library/functions.html#bool)] = None, loglevel: Optional[[str](https://docs.python.org/3/library/stdtypes.html#str)] = None, multi_db_dir: Optional[[str](https://docs.python.org/3/library/stdtypes.html#str)] = None, no_auto_commit: Optional[[bool](https://docs.python.org/3/library/functions.html#bool)] = None, echo: [bool](https://docs.python.org/3/library/functions.html#bool) = False)
+### class doltpy.sql.sql.ServerConfig(branch: Union[[str](https://docs.python.org/3/library/stdtypes.html#str), NoneType] = None, config: Union[[str](https://docs.python.org/3/library/stdtypes.html#str), NoneType] = None, host: [str](https://docs.python.org/3/library/stdtypes.html#str) = '127.0.0.1', port: [int](https://docs.python.org/3/library/functions.html#int) = 3306, user: Union[[str](https://docs.python.org/3/library/stdtypes.html#str), NoneType] = None, password: Union[[str](https://docs.python.org/3/library/stdtypes.html#str), NoneType] = None, timeout: Union[[int](https://docs.python.org/3/library/functions.html#int), NoneType] = None, readonly: Union[[bool](https://docs.python.org/3/library/functions.html#bool), NoneType] = None, loglevel: Union[[str](https://docs.python.org/3/library/stdtypes.html#str), NoneType] = None, multi_db_dir: Union[[str](https://docs.python.org/3/library/stdtypes.html#str), NoneType] = None, no_auto_commit: Union[[bool](https://docs.python.org/3/library/functions.html#bool), NoneType] = None, echo: [bool](https://docs.python.org/3/library/functions.html#bool) = False)
 Bases: [`object`](https://docs.python.org/3/library/functions.html#object)
 
+
+#### branch(: Optional[[str](https://docs.python.org/3/library/stdtypes.html#str)] = None)
+
+#### config(: Optional[[str](https://docs.python.org/3/library/stdtypes.html#str)] = None)
+
+#### echo(: [bool](https://docs.python.org/3/library/functions.html#bool) = False)
+
+#### host(: [str](https://docs.python.org/3/library/stdtypes.html#str) = '127.0.0.1')
+
+#### loglevel(: Optional[[str](https://docs.python.org/3/library/stdtypes.html#str)] = None)
+
+#### multi_db_dir(: Optional[[str](https://docs.python.org/3/library/stdtypes.html#str)] = None)
+
+#### no_auto_commit(: Optional[[bool](https://docs.python.org/3/library/functions.html#bool)] = None)
+
+#### password(: Optional[[str](https://docs.python.org/3/library/stdtypes.html#str)] = None)
+
+#### port(: [int](https://docs.python.org/3/library/functions.html#int) = 3306)
+
+#### readonly(: Optional[[bool](https://docs.python.org/3/library/functions.html#bool)] = None)
+
+#### timeout(: Optional[[int](https://docs.python.org/3/library/functions.html#int)] = None)
+
+#### user(: Optional[[str](https://docs.python.org/3/library/stdtypes.html#str)] = None)
 ## Module contents

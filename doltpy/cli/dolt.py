@@ -15,10 +15,10 @@ from ..shared.helpers import to_list
 logger = logging.getLogger(__name__)
 
 
-class DoltException(Exception):
+class DoltCliException(Exception):
 
     """
-    A class representing a Dolt exception.
+    A class representing a Dolt exception that occurred when dispatching a Dolt command to the CLI via a subprocess.
     """
 
     def __init__(
@@ -35,16 +35,6 @@ class DoltException(Exception):
         self.exitcode = exitcode
 
 
-class DoltServerNotRunningException(Exception):
-    def __init__(self, message):
-        self.message = message
-
-
-class DoltWrongServerException(Exception):
-    def __init__(self, message):
-        self.message = message
-
-
 class DoltDirectoryException(Exception):
     def __init__(self, message):
         self.message = message
@@ -57,16 +47,16 @@ def _execute(args: List[str], cwd: Optional[str] = None):
     exitcode = proc.returncode
 
     if exitcode != 0:
-        raise DoltException(_args, out, err, exitcode)
+        raise DoltCliException(_args, out, err, exitcode)
 
     return out.decode("utf-8")
 
 
 class DoltStatus:
     """
-    Represents the current status of a Dolt repo, summarized by the is_clean field which is True if the wokring set is
-    clean, and false otherwise. If the working set is not clean, then the changes are stored in maps, one for added
-    tables, and one for modifications, each name maps to a flag indicating whether the change is staged.
+    Represents the current status of a Dolt repo, summarized by the is_clean field which is True if the working set is
+    clean, and false otherwise. If the working set is not clean, then the changes are stored in a pair of maps, both
+    of which map table names to table status, one for adds and one modifications.
     """
 
     def __init__(
@@ -160,6 +150,11 @@ class DoltRemote:
 
 
 class DoltHubContext:
+    """
+    Provides a context manager for interacting with DoltHub hosted databases. Upon entry it clones the specified
+    database
+    """
+
     def __init__(
         self,
         db_path: str,
@@ -190,7 +185,7 @@ class DoltHubContext:
 
         self.dolt = dolt
 
-    def __exit__(self, type, value, traceback):
+    def __exit__(self, *args):
         pass
 
 
@@ -199,6 +194,8 @@ class Dolt(DoltT):
     This class wraps the Dolt command line interface, mimicking functionality exactly to the extent that is possible.
     Some commands simply do not translate to Python, such as `dolt sql` (with no arguments) since that command
     launches an interactive shell.
+
+    In many cases the class converts command line output to appropriate data structures.
     """
 
     def __init__(self, repo_dir: str):
@@ -222,8 +219,8 @@ class Dolt(DoltT):
         """
         Manages executing a dolt command, pass all commands, sub-commands, and arguments as they would appear on the
         command line.
-        :param args:
-        :param print_output:
+        :param args: list of command line switches and values
+        :param print_output: flag indicating whether to log the output.
         :return:
         """
         output = _execute(args, self.repo_dir())
@@ -262,8 +259,8 @@ class Dolt(DoltT):
 
     def status(self) -> DoltStatus:
         """
-        Parses the status of this repository into a `DoltStatus` object.
-        :return:
+        Returns a data structure representing the output of `dolt status`
+        :return: `DoltStatus`
         """
         new_tables: Dict[str, bool] = {}
         changes: Dict[str, bool] = {}
@@ -293,8 +290,8 @@ class Dolt(DoltT):
 
     def add(self, table_or_tables: Union[str, List[str]]) -> DoltStatus:
         """
-        Adds the table or list of tables in the working tree to staging.
-        :param table_or_tables:
+        Adds the table or list of tables in the working set to staging.
+        :param table_or_tables: a table name or a list of table names.
         :return:
         """
         self.execute(["add"] + to_list(table_or_tables))
@@ -307,11 +304,10 @@ class Dolt(DoltT):
         soft: bool = False,
     ):
         """
-        Reset a table or set of tables that have changes in the working set to their value at the tip of the current
-        branch.
-        :param table_or_tables:
-        :param hard:
-        :param soft:
+        Sets the state of a table in staging to its value at HEAD.
+        :param table_or_tables: a table name or a list of table names.
+        :param hard: reset working and staged tables.
+        :param soft: don't touch working tables but remove tables from staging.
         :return:
         """
         to_reset = to_list(table_or_tables)
@@ -335,10 +331,10 @@ class Dolt(DoltT):
         date: datetime.datetime = None,
     ):
         """
-        Create a commit with the currents in the working set that are currently in staging.
-        :param message:
-        :param allow_empty:
-        :param date:
+        Create a commit associated with the staged changes.
+        :param message: the commit message to associate with the commit.
+        :param allow_empty: optionally allow an empty commit.
+        :param date: override the timestamp associated with the commit, useful for backfilling data.
         :return:
         """
         args = ["commit", "-m", message]
@@ -352,13 +348,22 @@ class Dolt(DoltT):
 
         self.execute(args)
 
-    def merge(self, branch: str, message: str, squash: bool = False):
+    def merge(
+        self,
+        branch: str,
+        message: str,
+        squash: bool = False,
+        no_fast_forward: bool = False
+    ):
         """
-        Executes a merge operation. If conflicts result, the merge is aborted, as an interactive merge does not really
-        make sense in a scripting environment, or at least we have not figured out how to model it in a way that does.
-        :param branch:
-        :param message:
-        :param squash:
+        Executes a merge operation, merges the specified branch to the currently checked out branch. If conflicts
+        result, the merge is aborted.
+
+        WIP: how to resolve merge conflicts.
+        :param branch: the branch to merge.
+        :param message: the message to associate with the merge commit.
+        :param squash: optionally squash the changes on the branch being merged into a single commit.
+        :param no_fast_forward: create a merge commit regardless of whether fast-forward resolution works.
         :return:
         """
         current_branch, branches = self._get_branches()
@@ -479,9 +484,9 @@ class Dolt(DoltT):
 
     def log(self, number: Optional[int] = None, commit: Optional[str] = None) -> OrderedDict:
         """
-        Parses the log created by running the log command into instances of `DoltCommit` that provide detail of the
-        commit, including timestamp and hash.
-        :param number:
+        Get the commit history of this Dolt database, parsed into a data structure that represents details of the
+        commit.
+        :param number: the number of a commits to grab.
         :param commit:
         :return:
         """
@@ -535,8 +540,9 @@ class Dolt(DoltT):
         limit: Optional[int] = None,
     ):
         """
-        Executes a diff command and prints the output. In the future we plan to create a diff object that will allow
-        for programmatic interactions.
+        Executes a diff command and prints the output.
+
+        TODO: In the future we plan to create a diff object that will allow for programmatic interactions.
         :param commit: commit to diff against the tip of the current branch
         :param other_commit: optionally specify two specific commits if desired
         :param table_or_tables: table or list of tables to diff
@@ -582,6 +588,8 @@ class Dolt(DoltT):
     def blame(self, table_name: str, rev: Optional[str] = None):
         """
         Executes a blame command that prints out a table that shows the authorship of the last change to a row.
+
+        TODO: parse the output into some kind of useful data structure.
         :param table_name:
         :param rev:
         :return:
@@ -603,17 +611,17 @@ class Dolt(DoltT):
         delete: bool = False,
         copy: bool = False,
         move: bool = False,
-    ):
+    ) -> Tuple[DoltBranch, List[DoltBranch]]:
         """
-        Checkout, create, delete, move, or copy, a branch. Only
-        :param branch_name:
-        :param start_point:
-        :param new_branch:
-        :param force:
-        :param delete:
-        :param copy:
-        :param move:
-        :return:
+        Checkout, create, delete, move, or copy, a branch.
+        :param branch_name: the branch to checkout, create, move or copy.
+        :param start_point: the ref a newly created branch points to.
+        :param new_branch: the name of new branch being copied or moved to.
+        :param force: override branch_name to point at `start_point` even if it exists, force delete of branch with unmerged commits.
+        :param delete: delete branch branch_name
+        :param copy: copy `branch_name` to `new_branch`
+        :param move: move `branch_name` to `new_branch`
+        :return: a `Tuple[DoltBranch, List[DoltBranch]]` of the current branch and all branches on the database
         """
         switch_count = [el for el in [delete, copy, move] if el]
         if len(switch_count) > 1:
@@ -690,7 +698,7 @@ class Dolt(DoltT):
                 branches.append(DoltBranch(branch, commit))
 
         if not active_branch:
-            raise DoltException("Failed to set active branch")
+            raise DoltCliException("Failed to set active branch")
 
         return active_branch, branches
 
@@ -702,8 +710,10 @@ class Dolt(DoltT):
         start_point: Optional[str] = None,
     ):
         """
-        Checkout an existing branch, or create a new one, optionally at a specified commit. Or, checkout a table or list
-        of tables.
+        Updates tables in the working set to match the staged versions. If no tables are given, dolt checkout will also
+        update HEAD to set the specified branch as the current branch.
+
+        Optionally create a new branch called `checkout_branch` at `start_point`.
         :param branch: branch to checkout or create
         :param table_or_tables: table or tables to checkout
         :param checkout_branch: branch to checkout
@@ -736,10 +746,10 @@ class Dolt(DoltT):
         """
         Add or remove remotes to this repository. Note we do not currently support some more esoteric options for using
         AWS and GCP backends, but will do so in a future release.
-        :param add:
-        :param name:
-        :param url:
-        :param remove:
+        :param add: add a remote named `name`.
+        :param name: name of remote to add or remove.
+        :param url: remote URL.
+        :param remove: remove remote named `name`.
         :return:
         """
         args = ["remote", "--verbose"]
@@ -779,12 +789,12 @@ class Dolt(DoltT):
         force: bool = False,
     ):
         """
-        Push the to the specified remote. If set_upstream is provided will create an upstream reference of all branches
+        Push the to the specified remote. If `set_upstream` is provided will create an upstream reference of all branches
         in a repo.
-        :param remote:
-        :param refspec: optionally specify a branch to push
-        :param set_upstream: add upstream reference for every branch successfully pushed
-        :param force: overwrite the history of the upstream with this repo's history
+        :param remote: name of the remote to push to.
+        :param refspec: optionally specify a branch to push.
+        :param set_upstream: add upstream reference for every branch successfully pushed.
+        :param force: overwrite the history of the upstream with this repo's history.
         :return:
         """
         args = ["push"]
@@ -818,9 +828,9 @@ class Dolt(DoltT):
     ):
         """
         Fetch the specified branch or list of branches from the remote provided, defaults to origin.
-        :param remote: the reomte to fetch from
-        :param refspec_or_refspecs: branch or branches to fetch
-        :param force: whether to override local history with remote
+        :param remote: the reomte to fetch from.
+        :param refspec_or_refspecs: branch or branches to fetch from specified remote.
+        :param force: whether to override local history with remote.
         :return:
         """
         args = ["fetch"]
@@ -842,13 +852,13 @@ class Dolt(DoltT):
         branch: Optional[str] = None,
     ) -> "Dolt":
         """
-        Clones the specified DoltHub database into a new directory, or optionally an existing directory provided by the
-        user.
-        :param remote_url:
-        :param new_dir:
-        :param remote:
-        :param branch:
-        :return:
+        Clones the specified remote database into a new directory, or optionally an existing directory provided by the
+        user. Returns an instance of `Dolt` for the cloned database.
+        :param remote_url: the URL specifying the remote to clone.
+        :param new_dir: the directory to clone Dolt into.
+        :param remote: name the remote cloned from.
+        :param branch: name the branch to clone.
+        :return: `Dolt` instance tied to the directory the database was cloned into.
         """
         args = ["clone", remote_url]
 
@@ -892,12 +902,12 @@ class Dolt(DoltT):
         """
         Reads the specified tables, or all the tables, from the DoltHub database specified into a new local database,
         at the commit or branch provided. Users can optionally provide an existing directory.
-        :param remote_url:
-        :param committish:
-        :param table_or_tables:
-        :param new_dir:
-        :return:
-        """
+        :param remote_url: remote URL to clone from.
+        :param committish: commit, branch, or tag, to clone tables at.
+        :param table_or_tables: table or tables to clone.
+        :param new_dir: oiptionally specify a directory to clone the data into.
+        :return: `Dolt` instance tied to the directory the database was cloned into.
+         """
         args = ["read-tables"]
 
         new_dir = Dolt._new_dir_helper(new_dir, remote_url)
@@ -916,7 +926,7 @@ class Dolt(DoltT):
     def creds_new(self) -> bool:
         """
         Create a new set of credentials for this Dolt repository.
-        :return:
+        :return: boolean indicating if the operation was successful.
         """
         args = ["creds", "new"]
 
@@ -934,7 +944,7 @@ class Dolt(DoltT):
     def creds_rm(self, public_key: str) -> bool:
         """
         Remove the key pair identified by the specified public key ID.
-        :param public_key:
+        :param public_key: public key associated with the kay pair to remove.
         :return:
         """
         args = ["creds", "rm", public_key]
@@ -943,14 +953,14 @@ class Dolt(DoltT):
 
         if output[0].startswith("failed"):
             logger.error(output[0])
-            raise DoltException("Tried to remove non-existent creds")
+            raise DoltCliException("Tried to remove non-existent creds")
 
         return True
 
     def creds_ls(self) -> List[DoltKeyPair]:
         """
         Parse the set of keys this repo has into `DoltKeyPair` objects.
-        :return:
+        :return: `List[DoltKeyPair]` representing the database's key pairs.
         """
         args = ["creds", "ls", "--verbose"]
 
@@ -994,8 +1004,8 @@ class Dolt(DoltT):
     def creds_use(self, public_key_id: str) -> bool:
         """
         Use the credentials specified by the provided public keys ID.
-        :param public_key_id:
-        :return:
+        :param public_key_id: public key associated with they key pair to be used.
+        :return: boolean indicating whether the operations was successful.
         """
         args = ["creds", "use", public_key_id]
 
@@ -1003,7 +1013,7 @@ class Dolt(DoltT):
 
         if output and output[0].startswith("error"):
             logger.error("\n".join(output[3:]))
-            raise DoltException("Bad public key")
+            raise DoltCliException("Bad public key")
 
         return True
 
@@ -1028,13 +1038,13 @@ class Dolt(DoltT):
     ) -> Dict[str, str]:
         """
         Class method for manipulating global configs.
-        :param name:
-        :param value:
-        :param add:
-        :param list:
-        :param get:
-        :param unset:
-        :return:
+        :param name: the config key, for example "user.name".
+        :param value: the value for the given key, for example "James Smith" for key "user.name".
+        :param add: indicates whether to add the given value for the given name.
+        :param list: list the configs.
+        :param get: get the value for a given key.
+        :param unset: unset a given key.
+        :return: `Dict[str, str]` representing the configs.
         """
         return cls._config_helper(
             global_config=True,
@@ -1057,14 +1067,14 @@ class Dolt(DoltT):
         unset: bool = False,
     ) -> Dict[str, str]:
         """
-        Instance method for manipulating configs local to a repository.
-        :param name:
-        :param value:
-        :param add:
-        :param list:
-        :param get:
-        :param unset:
-        :return:
+        Class method for manipulating local configs.
+        :param name: the config key, for example "user.name".
+        :param value: the value for the given key, for example "James Smith" for key "user.name".
+        :param add: indicates whether to add the given value for the given name.
+        :param list: list the configs.
+        :param get: get the value for a given key.
+        :param unset: unset a given key.
+        :return: `Dict[str, str]` representing the configs.
         """
         return self._config_helper(
             local_config=True,
@@ -1176,9 +1186,9 @@ class Dolt(DoltT):
 
     def schema_export(self, table: str, filename: Optional[str] = None):
         """
-        Export the scehma of the table specified to the file path specified.
-        :param table:
-        :param filename:
+        Export the schema of the table specified to the file path specified.
+        :param table: the name of the table schema is being exported.
+        :param filename: file to output schema to.
         :return:
         """
         args = ["schema", "export", table]
@@ -1263,10 +1273,10 @@ class Dolt(DoltT):
 
     def schema_show(self, table_or_tables: Union[str, List[str]], commit: Optional[str] = None):
         """
-        Dislay the schema of the specified table or tables at the (optionally) specified commit, defaulting to the tip
+        Display the schema of the specified table or tables at the (optionally) specified commit, defaulting to the tip
         of master on the current branch.
-        :param table_or_tables:
-        :param commit:
+        :param table_or_tables: table or list of tables to to show schema for.
+        :param commit: the commit to show the schema at.
         :return:
         """
         args = ["schema", "show"]
@@ -1281,7 +1291,7 @@ class Dolt(DoltT):
     def table_rm(self, table_or_tables: Union[str, List[str]]):
         """
         Remove the table or list of tables provided from the working set.
-        :param table_or_tables:
+        :param table_or_tables: table or tables to remove.
         :return:
         """
         self.execute(["rm", " ".join(to_list(table_or_tables))])

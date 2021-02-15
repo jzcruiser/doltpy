@@ -52,13 +52,12 @@ the target database.
 :return:
 
 
-### doltpy.sql.sync.dolt.get_dropped_pks(engine: sqlalchemy.engine.base.Engine, table: sqlalchemy.sql.schema.Table, from_commit: [str](https://docs.python.org/3/library/stdtypes.html#str), to_commit: [str](https://docs.python.org/3/library/stdtypes.html#str))
+### doltpy.sql.sync.dolt.get_dropped_pks(engine: sqlalchemy.engine.base.Engine, table: sqlalchemy.sql.schema.Table, dolt_commit: doltpy.sql.sql.DoltCommit)
 Given table_metadata, a connection, and a pair of commits, will return the list of pks that were dropped between
 the two commits.
 :param engine:
 :param table:
-:param from_commit:
-:param to_commit:
+:param dolt_commit:
 :return:
 
 
@@ -79,26 +78,23 @@ be easy enough to provide some other kind of function if neither of these meet y
 :return:
 
 
-### doltpy.sql.sync.dolt.get_table_reader(commit_ref: Optional[[str](https://docs.python.org/3/library/stdtypes.html#str)] = None, branch: Optional[[str](https://docs.python.org/3/library/stdtypes.html#str)] = None)
+### doltpy.sql.sync.dolt.get_table_reader(commit_ref: Optional[[str](https://docs.python.org/3/library/stdtypes.html#str)] = None)
 Returns a function that reads the entire table at a commit and/or branch, and returns the data.
 :param commit_ref:
-:param branch:
 :return:
 
 
-### doltpy.sql.sync.dolt.get_table_reader_diffs(commit_ref: Optional[[str](https://docs.python.org/3/library/stdtypes.html#str)] = None, branch: Optional[[str](https://docs.python.org/3/library/stdtypes.html#str)] = None)
+### doltpy.sql.sync.dolt.get_table_reader_diffs(commit_ref: Optional[[str](https://docs.python.org/3/library/stdtypes.html#str)] = None)
 Returns a function that reads the diff from a commit and/or branch, defaults to the HEAD of the current branch if
 neither are provided.
 :param commit_ref:
-:param branch:
 :return:
 
 
-### doltpy.sql.sync.dolt.get_target_writer(dsc: doltpy.sql.sql.DoltSQLContext, branch: Optional[[str](https://docs.python.org/3/library/stdtypes.html#str)] = None, commit: [bool](https://docs.python.org/3/library/functions.html#bool) = True, message: Optional[[str](https://docs.python.org/3/library/stdtypes.html#str)] = None)
+### doltpy.sql.sync.dolt.get_target_writer(dsc: doltpy.sql.sql.DoltSQLContext, commit: [bool](https://docs.python.org/3/library/functions.html#bool) = True, message: Optional[[str](https://docs.python.org/3/library/stdtypes.html#str)] = None)
 Given a repo, writes to the specified branch (defaults to current), and optionally commits with the provided
 message or generates a standard one.
-:param dssc:
-:param branch:
+:param dsc:
 :param commit:
 :param message:
 :return:

@@ -1,6 +1,6 @@
 import logging
 import datetime
-from typing import Any, Iterable, List, Mapping, Tuple, Optional, Dict
+from typing import Any, Iterable, List, Mapping, Optional, Dict
 
 import pandas as pd  # type: ignore
 from sqlalchemy import Column, Date, DateTime, Float, Integer, MetaData, String, Table  # type: ignore
@@ -46,10 +46,10 @@ def clean_types(data: Iterable[dict]) -> List[dict]:
 
 def get_existing_pks(engine: Engine, table: Table) -> Mapping[int, dict]:
     """
-    Creates an index of hashes of the values of the primary keys in the table provided.
-    :param engine:
-    :param table:
-    :return:
+    Creates an index mapping hash of primary keys to the dicts representing the columns and their values.
+    :param engine: SQL Alchemy `Engine` for the database being queried.
+    :param table: `Table` instance to query.
+    :return: `Mapping[int, dict]` mapping hash of primary key cols to dict representing column values.
     """
     with engine.connect() as conn:
         pk_cols = [table.c[col.name] for col in table.columns if col.primary_key]
@@ -68,7 +68,16 @@ def infer_table_schema(
     rows: Iterable[dict],
     primary_key: Optional[List[str]],
 ):
-    # generate and execute a create table statement
+    """
+    Creates a table using a schema inferred from the rows provided.
+
+    # TODO make primary keys optional.
+    :param metadata: SQL Alchemy `Metadata` object representing the database we will create a table in.
+    :param table_name: the name of the table to be created.
+    :param rows: the data to use for inferring a schema.
+    :param primary_key: the primary key for the table.
+    :return:
+    """
     cols_to_types = {}
     columns = rows_to_columns(rows)
     for col_name, list_of_values in columns.items():

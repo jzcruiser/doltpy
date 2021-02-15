@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Index &#8212; Doltpy Documentation (0.1.x)</title>
+    <title>Index &#8212; Doltpy Documentation (1.1.x)</title>
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="_static/werkzeug.css" type="text/css" />
     <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -27,7 +27,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">Doltpy Documentation (0.1.x)</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Doltpy Documentation (1.1.x)</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Index</a></li> 
       </ul>
     </div>  
@@ -52,6 +52,7 @@
  | <a href="#I"><strong>I</strong></a>
  | <a href="#L"><strong>L</strong></a>
  | <a href="#M"><strong>M</strong></a>
+ | <a href="#N"><strong>N</strong></a>
  | <a href="#P"><strong>P</strong></a>
  | <a href="#R"><strong>R</strong></a>
  | <a href="#S"><strong>S</strong></a>
@@ -74,6 +75,8 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="doltpy.sql.html#doltpy.sql.sql.DoltCommit.append_merge_parent">append_merge_parent() (doltpy.sql.sql.DoltCommit method)</a>
 </li>
+      <li><a href="doltpy.sql.html#doltpy.sql.sql.DoltCommit.author">author (doltpy.sql.sql.DoltCommit attribute)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -86,6 +89,8 @@
         <li><a href="doltpy.types.html#doltpy.types.dolt.DoltT.blame">(doltpy.types.dolt.DoltT method)</a>
 </li>
       </ul></li>
+      <li><a href="doltpy.sql.html#doltpy.sql.sql.ServerConfig.branch">branch (doltpy.sql.sql.ServerConfig attribute)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="doltpy.cli.html#doltpy.cli.dolt.Dolt.branch">branch() (doltpy.cli.dolt.Dolt method)</a>
@@ -132,24 +137,22 @@
       </ul></li>
       <li><a href="doltpy.sql.html#doltpy.sql.sql.DoltSQLContext.commit_tables">commit_tables() (doltpy.sql.sql.DoltSQLContext method)</a>
 </li>
+      <li><a href="doltpy.sql.html#doltpy.sql.sql.ServerConfig.config">config (doltpy.sql.sql.ServerConfig attribute)</a>
+</li>
       <li><a href="doltpy.cli.html#doltpy.cli.dolt.Dolt.config_global">config_global() (doltpy.cli.dolt.Dolt class method)</a>
 
       <ul>
         <li><a href="doltpy.types.html#doltpy.types.dolt.DoltT.config_global">(doltpy.types.dolt.DoltT class method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="doltpy.cli.html#doltpy.cli.dolt.Dolt.config_local">config_local() (doltpy.cli.dolt.Dolt method)</a>
 
       <ul>
         <li><a href="doltpy.types.html#doltpy.types.dolt.DoltT.config_local">(doltpy.types.dolt.DoltT method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="doltpy.etl.html#doltpy.etl.loaders.create_table_from_schema_import">create_table_from_schema_import() (in module doltpy.etl.loaders)</a>
-</li>
-      <li><a href="doltpy.etl.html#doltpy.etl.loaders.create_table_from_schema_import_unique_key">create_table_from_schema_import_unique_key() (in module doltpy.etl.loaders)</a>
-</li>
       <li><a href="doltpy.cli.html#doltpy.cli.dolt.Dolt.creds_check">creds_check() (doltpy.cli.dolt.Dolt method)</a>
 
       <ul>
@@ -195,6 +198,8 @@
       <li><a href="doltpy.cli.html#doltpy.cli.dolt.Dolt.diff">diff() (doltpy.cli.dolt.Dolt method)</a>
 
       <ul>
+        <li><a href="doltpy.sql.html#doltpy.sql.sql.DoltSQLContext.diff">(doltpy.sql.sql.DoltSQLContext method)</a>
+</li>
         <li><a href="doltpy.types.html#doltpy.types.dolt.DoltT.diff">(doltpy.types.dolt.DoltT method)</a>
 </li>
       </ul></li>
@@ -210,6 +215,8 @@
       </ul></li>
       <li><a href="doltpy.cli.html#doltpy.cli.dolt.DoltBranch">DoltBranch (class in doltpy.cli.dolt)</a>
 </li>
+      <li><a href="doltpy.cli.html#doltpy.cli.dolt.DoltCliException">DoltCliException</a>
+</li>
       <li><a href="doltpy.cli.html#doltpy.cli.dolt.DoltCommit">DoltCommit (class in doltpy.cli.dolt)</a>
 
       <ul>
@@ -217,8 +224,6 @@
 </li>
       </ul></li>
       <li><a href="doltpy.cli.html#doltpy.cli.dolt.DoltDirectoryException">DoltDirectoryException</a>
-</li>
-      <li><a href="doltpy.cli.html#doltpy.cli.dolt.DoltException">DoltException</a>
 </li>
       <li><a href="doltpy.cli.html#doltpy.cli.dolt.DoltHubContext">DoltHubContext (class in doltpy.cli.dolt)</a>
 </li>
@@ -274,27 +279,6 @@
 </li>
       </ul></li>
       <li>
-    doltpy.etl
-
-      <ul>
-        <li><a href="doltpy.etl.html#module-doltpy.etl">module</a>
-</li>
-      </ul></li>
-      <li>
-    doltpy.etl.loaders
-
-      <ul>
-        <li><a href="doltpy.etl.html#module-doltpy.etl.loaders">module</a>
-</li>
-      </ul></li>
-      <li>
-    doltpy.etl.wrappers
-
-      <ul>
-        <li><a href="doltpy.etl.html#module-doltpy.etl.wrappers">module</a>
-</li>
-      </ul></li>
-      <li>
     doltpy.shared
 
       <ul>
@@ -308,8 +292,6 @@
         <li><a href="doltpy.shared.html#module-doltpy.shared.helpers">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     doltpy.shared.system_helpers
 
@@ -317,6 +299,8 @@
         <li><a href="doltpy.shared.html#module-doltpy.shared.system_helpers">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     doltpy.sql
 
@@ -403,8 +387,6 @@
       </ul></li>
       <li><a href="doltpy.cli.html#doltpy.cli.dolt.DoltRemote">DoltRemote (class in doltpy.cli.dolt)</a>
 </li>
-      <li><a href="doltpy.cli.html#doltpy.cli.dolt.DoltServerNotRunningException">DoltServerNotRunningException</a>
-</li>
       <li><a href="doltpy.sql.html#doltpy.sql.sql.DoltSQLContext">DoltSQLContext (class in doltpy.sql.sql)</a>
 </li>
       <li><a href="doltpy.sql.html#doltpy.sql.sql.DoltSQLEngineContext">DoltSQLEngineContext (class in doltpy.sql.sql)</a>
@@ -417,8 +399,6 @@
 </li>
       <li><a href="doltpy.cli.html#doltpy.cli.dolt.DoltTable">DoltTable (class in doltpy.cli.dolt)</a>
 </li>
-      <li><a href="doltpy.cli.html#doltpy.cli.dolt.DoltWrongServerException">DoltWrongServerException</a>
-</li>
       <li><a href="doltpy.sql.sync.html#doltpy.sql.sync.dolt.drop_missing_pks">drop_missing_pks() (in module doltpy.sql.sync.dolt)</a>
 </li>
       <li><a href="doltpy.sql.sync.html#doltpy.sql.sync.db_tools.drop_primary_keys">drop_primary_keys() (in module doltpy.sql.sync.db_tools)</a>
@@ -429,6 +409,10 @@
 <h2 id="E">E</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="doltpy.sql.html#doltpy.sql.sql.ServerConfig.echo">echo (doltpy.sql.sql.ServerConfig attribute)</a>
+</li>
+      <li><a href="doltpy.sql.html#doltpy.sql.sql.DoltCommit.email">email (doltpy.sql.sql.DoltCommit attribute)</a>
+</li>
       <li><a href="doltpy.sql.html#doltpy.sql.sql.DoltSQLContext.engine">engine (doltpy.sql.sql.DoltSQLContext attribute)</a>
 
       <ul>
@@ -467,21 +451,11 @@
 <h2 id="G">G</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="doltpy.etl.html#doltpy.etl.loaders.get_branch_creator">get_branch_creator() (in module doltpy.etl.loaders)</a>
-</li>
-      <li><a href="doltpy.etl.html#doltpy.etl.loaders.get_bulk_table_writer">get_bulk_table_writer() (in module doltpy.etl.loaders)</a>
-</li>
-      <li><a href="doltpy.etl.html#doltpy.etl.loaders.get_df_table_writer">get_df_table_writer() (in module doltpy.etl.loaders)</a>
-</li>
-      <li><a href="doltpy.etl.html#doltpy.etl.loaders.get_dolt_loader">get_dolt_loader() (in module doltpy.etl.loaders)</a>
-</li>
       <li><a href="doltpy.sql.sync.html#doltpy.sql.sync.dolt.get_dropped_pks">get_dropped_pks() (in module doltpy.sql.sync.dolt)</a>
 </li>
       <li><a href="doltpy.sql.html#doltpy.sql.helpers.get_existing_pks">get_existing_pks() (in module doltpy.sql.helpers)</a>
 </li>
       <li><a href="doltpy.sql.sync.html#doltpy.sql.sync.dolt.get_from_commit_to_commit">get_from_commit_to_commit() (in module doltpy.sql.sync.dolt)</a>
-</li>
-      <li><a href="doltpy.sql.html#doltpy.sql.helpers.get_inserts_and_updates">get_inserts_and_updates() (in module doltpy.sql.helpers)</a>
 </li>
       <li><a href="doltpy.sql.sync.html#doltpy.sql.sync.db_tools.get_source_reader">get_source_reader() (in module doltpy.sql.sync.db_tools)</a>
 
@@ -489,8 +463,6 @@
         <li><a href="doltpy.sql.sync.html#doltpy.sql.sync.dolt.get_source_reader">(in module doltpy.sql.sync.dolt)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="doltpy.sql.sync.html#doltpy.sql.sync.db_tools.get_table_metadata">get_table_metadata() (in module doltpy.sql.sync.db_tools)</a>
 </li>
       <li><a href="doltpy.sql.sync.html#doltpy.sql.sync.db_tools.get_table_reader">get_table_reader() (in module doltpy.sql.sync.db_tools)</a>
@@ -499,9 +471,9 @@
         <li><a href="doltpy.sql.sync.html#doltpy.sql.sync.dolt.get_table_reader">(in module doltpy.sql.sync.dolt)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="doltpy.sql.sync.html#doltpy.sql.sync.dolt.get_table_reader_diffs">get_table_reader_diffs() (in module doltpy.sql.sync.dolt)</a>
-</li>
-      <li><a href="doltpy.etl.html#doltpy.etl.loaders.get_table_transformer">get_table_transformer() (in module doltpy.etl.loaders)</a>
 </li>
       <li><a href="doltpy.sql.sync.html#doltpy.sql.sync.dolt.get_target_writer">get_target_writer() (in module doltpy.sql.sync.dolt)</a>
 
@@ -515,8 +487,6 @@
       </ul></li>
       <li><a href="doltpy.sql.sync.html#doltpy.sql.sync.db_tools.get_target_writer_helper">get_target_writer_helper() (in module doltpy.sql.sync.db_tools)</a>
 </li>
-      <li><a href="doltpy.etl.html#doltpy.etl.loaders.get_unique_key_table_writer">get_unique_key_table_writer() (in module doltpy.etl.loaders)</a>
-</li>
   </ul></td>
 </tr></table>
 
@@ -524,6 +494,10 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="doltpy.sql.html#doltpy.sql.helpers.hash_row_els">hash_row_els() (in module doltpy.sql.helpers)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="doltpy.sql.html#doltpy.sql.sql.ServerConfig.host">host (doltpy.sql.sql.ServerConfig attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -541,8 +515,6 @@
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="doltpy.etl.html#doltpy.etl.loaders.insert_unique_key">insert_unique_key() (in module doltpy.etl.loaders)</a>
-</li>
       <li><a href="doltpy.sql.html#doltpy.sql.sql.DoltCommit.is_merge">is_merge() (doltpy.sql.sql.DoltCommit method)</a>
 </li>
   </ul></td>
@@ -551,10 +523,6 @@
 <h2 id="L">L</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="doltpy.etl.html#doltpy.etl.wrappers.load_to_dolt">load_to_dolt() (in module doltpy.etl.wrappers)</a>
-</li>
-      <li><a href="doltpy.etl.html#doltpy.etl.wrappers.load_to_dolthub">load_to_dolthub() (in module doltpy.etl.wrappers)</a>
-</li>
       <li><a href="doltpy.cli.html#doltpy.cli.dolt.Dolt.log">log() (doltpy.cli.dolt.Dolt method)</a>
 
       <ul>
@@ -565,6 +533,8 @@
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="doltpy.sql.html#doltpy.sql.sql.ServerConfig.loglevel">loglevel (doltpy.sql.sql.ServerConfig attribute)</a>
+</li>
       <li><a href="doltpy.cli.html#doltpy.cli.dolt.Dolt.ls">ls() (doltpy.cli.dolt.Dolt method)</a>
 
       <ul>
@@ -583,6 +553,8 @@
         <li><a href="doltpy.types.html#doltpy.types.dolt.DoltT.merge">(doltpy.types.dolt.DoltT method)</a>
 </li>
       </ul></li>
+      <li><a href="doltpy.sql.html#doltpy.sql.sql.DoltCommit.message">message (doltpy.sql.sql.DoltCommit attribute)</a>
+</li>
       <li>
     module
 
@@ -600,12 +572,6 @@
         <li><a href="doltpy.cli.write.html#module-doltpy.cli.write">doltpy.cli.write</a>
 </li>
         <li><a href="doltpy.cli.write.html#module-doltpy.cli.write.write">doltpy.cli.write.write</a>
-</li>
-        <li><a href="doltpy.etl.html#module-doltpy.etl">doltpy.etl</a>
-</li>
-        <li><a href="doltpy.etl.html#module-doltpy.etl.loaders">doltpy.etl.loaders</a>
-</li>
-        <li><a href="doltpy.etl.html#module-doltpy.etl.wrappers">doltpy.etl.wrappers</a>
 </li>
         <li><a href="doltpy.shared.html#module-doltpy.shared">doltpy.shared</a>
 </li>
@@ -639,10 +605,30 @@
 </li>
       </ul></li>
   </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="doltpy.sql.html#doltpy.sql.sql.ServerConfig.multi_db_dir">multi_db_dir (doltpy.sql.sql.ServerConfig attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="N">N</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="doltpy.sql.html#doltpy.sql.sql.ServerConfig.no_auto_commit">no_auto_commit (doltpy.sql.sql.ServerConfig attribute)</a>
+</li>
+  </ul></td>
 </tr></table>
 
 <h2 id="P">P</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="doltpy.sql.html#doltpy.sql.sql.DoltCommit.parent_or_parents">parent_or_parents (doltpy.sql.sql.DoltCommit attribute)</a>
+</li>
+      <li><a href="doltpy.sql.html#doltpy.sql.sql.ServerConfig.password">password (doltpy.sql.sql.ServerConfig attribute)</a>
+</li>
+      <li><a href="doltpy.sql.html#doltpy.sql.sql.ServerConfig.port">port (doltpy.sql.sql.ServerConfig attribute)</a>
+</li>
+  </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="doltpy.cli.html#doltpy.cli.dolt.Dolt.pull">pull() (doltpy.cli.dolt.Dolt method)</a>
 
@@ -650,8 +636,6 @@
         <li><a href="doltpy.types.html#doltpy.types.dolt.DoltT.pull">(doltpy.types.dolt.DoltT method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="doltpy.cli.html#doltpy.cli.dolt.Dolt.push">push() (doltpy.cli.dolt.Dolt method)</a>
 
       <ul>
@@ -700,14 +684,18 @@
         <li><a href="doltpy.cli.read.html#doltpy.cli.read.read.read_rows_sql">(in module doltpy.cli.read.read)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="doltpy.cli.html#doltpy.cli.dolt.Dolt.read_tables">read_tables() (doltpy.cli.dolt.Dolt static method)</a>
 
       <ul>
         <li><a href="doltpy.types.html#doltpy.types.dolt.DoltT.read_tables">(doltpy.types.dolt.DoltT static method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="doltpy.sql.html#doltpy.sql.sql.ServerConfig.readonly">readonly (doltpy.sql.sql.ServerConfig attribute)</a>
+</li>
+      <li><a href="doltpy.sql.html#doltpy.sql.sql.DoltCommit.ref">ref (doltpy.sql.sql.DoltCommit attribute)</a>
+</li>
       <li><a href="doltpy.shared.html#doltpy.shared.system_helpers.register_cleanup">register_cleanup() (in module doltpy.shared.system_helpers)</a>
 </li>
       <li><a href="doltpy.cli.html#doltpy.cli.dolt.Dolt.remote">remote() (doltpy.cli.dolt.Dolt method)</a>
@@ -832,6 +820,12 @@
         <li><a href="doltpy.types.html#doltpy.types.dolt.DoltT.table_rm">(doltpy.types.dolt.DoltT method)</a>
 </li>
       </ul></li>
+      <li><a href="doltpy.sql.html#doltpy.sql.sql.ServerConfig.timeout">timeout (doltpy.sql.sql.ServerConfig attribute)</a>
+</li>
+      <li><a href="doltpy.shared.html#doltpy.shared.helpers.to_list">to_list() (in module doltpy.shared.helpers)</a>
+</li>
+      <li><a href="doltpy.sql.html#doltpy.sql.sql.DoltCommit.ts">ts (doltpy.sql.sql.DoltCommit attribute)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -844,6 +838,10 @@
         <li><a href="doltpy.sql.sync.html#doltpy.sql.sync.postgres.upsert_helper">(in module doltpy.sql.sync.postgres)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="doltpy.sql.html#doltpy.sql.sql.ServerConfig.user">user (doltpy.sql.sql.ServerConfig attribute)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -866,8 +864,6 @@
 <h2 id="W">W</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="doltpy.sql.html#doltpy.sql.sql.DoltSQLContext.write_batch">write_batch() (doltpy.sql.sql.DoltSQLContext method)</a>
-</li>
       <li><a href="doltpy.sql.html#doltpy.sql.sql.DoltSQLContext.write_columns">write_columns() (doltpy.sql.sql.DoltSQLContext method)</a>
 
       <ul>

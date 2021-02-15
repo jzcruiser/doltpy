@@ -1,14 +1,14 @@
 import logging
 from typing import List, Union, Optional
 
-from ..cli import Dolt, DoltHubContext
+from ..cli import DoltHubContext
 from ..etl.loaders import DoltLoader
 from ..shared.helpers import to_list
 
 logger = logging.getLogger(__name__)
 
 
-def load_to_dolthub(
+def load_to_dolt(
     loader_or_loaders: Union[DoltLoader, List[DoltLoader]],
     clone: bool,
     push: bool,
@@ -20,13 +20,17 @@ def load_to_dolthub(
     """
     This function takes a `DoltLoaderBuilder`, repo and remote settings, and attempts to execute the loaders returned
     by the builder.
-    :param loader_or_loaders:
-    :param dolt_dir:
-    :param clone:
-    :param push:
-    :param remote_name:
-    :param dry_run:
-    :param remote_url:
+
+    It works against either a local Dolt database, specified by `dolt_dir`, or against a remote Dolt database
+    specified by `remote_url`. Note that the `dolt` binary that subprocess finds on the search path must be
+    configured with appropriate credentials to execute the pull and push.
+    :param loader_or_loaders: a loader or list of loader functions that write take Dolt instance and execute a load.
+    :param dolt_dir: the directory where the Dolt database lives.
+    :param clone: indicate whether or not to clone the remote Dolt database specified by `remote_url`
+    :param push: a boolean flag indicating whether to push to remote associated with `remote_name`.
+    :param remote_name: the name of the remote to push the changes to, only applicble with `dolt_dir`.
+    :param dry_run: do everything except execute the load.
+    :param remote_url: the remote URL to clone and push to.
     :return:
     """
     with DoltHubContext(remote_url, dolt_dir, remote_name) as dolthub_context:
@@ -44,26 +48,3 @@ def load_to_dolthub(
                 if push:
                     logger.info(f"Pushing changes to remote {remote_name} on branch {branch}")
                     dolthub_context.dolt.push(remote_name, branch)
-
-
-def load_to_dolt(loader_or_loaders: Union[DoltLoader, List[DoltLoader]], dolt_dir: str, dry_run: bool):
-    """
-    This function takes a `DoltLoaderBuilder`, repo and remote settings, and attempts to execute the loaders returned
-    by the builder.
-    :param loader_or_loaders:
-    :param dolt_dir:
-    :param dry_run:
-    :return:
-    """
-
-    logger.info(
-        """Commencing load to Dolt with the following options:
-                - dolt_dir  {dolt_dir}
-        """.format(
-            dolt_dir=dolt_dir
-        )
-    )
-
-    if not dry_run:
-        for dolt_loader in to_list(loader_or_loaders):
-            dolt_loader(Dolt(dolt_dir))

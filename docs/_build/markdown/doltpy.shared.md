@@ -8,6 +8,8 @@
 ### doltpy.shared.helpers.columns_to_rows(columns: Mapping[[str](https://docs.python.org/3/library/stdtypes.html#str), [list](https://docs.python.org/3/library/stdtypes.html#list)])
 
 ### doltpy.shared.helpers.rows_to_columns(rows: Iterable[[dict](https://docs.python.org/3/library/stdtypes.html#dict)])
+
+### doltpy.shared.helpers.to_list(value: Union[Any, List[Any]])
 ## doltpy.shared.system_helpers module
 
 

@@ -1,5 +1,5 @@
 import pytest
-from doltpy.cli.dolt import Dolt, _execute, DoltException
+from doltpy.cli.dolt import Dolt, _execute, DoltCliException
 from doltpy.cli.write import write_pandas, UPDATE, CREATE
 from doltpy.cli.read import read_pandas
 import shutil
@@ -292,7 +292,7 @@ def test_remote_list(create_test_table):
 
 def test_checkout_non_existent_branch(create_test_table):
     repo, _ = create_test_table
-    with pytest.raises(DoltException):
+    with pytest.raises(DoltCliException):
         repo.checkout('master')
 
 

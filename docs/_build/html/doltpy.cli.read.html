@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>doltpy.cli.read package &#8212; Doltpy Documentation (0.1.x)</title>
+    <title>doltpy.cli.read package &#8212; Doltpy Documentation (1.1.x)</title>
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="_static/werkzeug.css" type="text/css" />
     <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -27,7 +27,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">Doltpy Documentation (0.1.x)</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Doltpy Documentation (1.1.x)</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">doltpy.cli.read package</a></li> 
       </ul>
     </div>  
@@ -47,32 +47,59 @@
 <dl class="py function">
 <dt id="doltpy.cli.read.read.read_columns">
 <code class="sig-prename descclassname">doltpy.cli.read.read.</code><code class="sig-name descname">read_columns</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dolt</span><span class="p">:</span> <span class="n"><a class="reference internal" href="doltpy.cli.html#doltpy.cli.dolt.Dolt" title="doltpy.cli.dolt.Dolt">doltpy.cli.dolt.Dolt</a></span></em>, <em class="sig-param"><span class="n">table</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></span></em>, <em class="sig-param"><span class="n">as_of</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; Mapping<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">, </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)">list</a><span class="p">]</span><a class="headerlink" href="#doltpy.cli.read.read.read_columns" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Read the contents of a table formatted into columns, optionally <cite>AS OF</cite> a commit, commit ref, or date.
+:param dolt:
+:param table: the table to read.
+:param as_of: a commit, commit ref, or date.
+:return: <cite>Mapping[str, list]</cite> mapping column names to lists of values.</p>
+</dd></dl>
 
 <dl class="py function">
 <dt id="doltpy.cli.read.read.read_columns_sql">
 <code class="sig-prename descclassname">doltpy.cli.read.read.</code><code class="sig-name descname">read_columns_sql</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dolt</span><span class="p">:</span> <span class="n"><a class="reference internal" href="doltpy.cli.html#doltpy.cli.dolt.Dolt" title="doltpy.cli.dolt.Dolt">doltpy.cli.dolt.Dolt</a></span></em>, <em class="sig-param"><span class="n">sql</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></span></em><span class="sig-paren">)</span> &#x2192; Mapping<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">, </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)">list</a><span class="p">]</span><a class="headerlink" href="#doltpy.cli.read.read.read_columns_sql" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Execute a SQL query and format the result as a mapping of columns to lists of values.
+:param dolt:
+:param sql: the SQL query to execute.
+:return: <cite>Mapping[str, list]</cite> representing the return value mapping columns to lists of values..</p>
+</dd></dl>
 
 <dl class="py function">
 <dt id="doltpy.cli.read.read.read_pandas">
 <code class="sig-prename descclassname">doltpy.cli.read.read.</code><code class="sig-name descname">read_pandas</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dolt</span><span class="p">:</span> <span class="n"><a class="reference internal" href="doltpy.cli.html#doltpy.cli.dolt.Dolt" title="doltpy.cli.dolt.Dolt">doltpy.cli.dolt.Dolt</a></span></em>, <em class="sig-param"><span class="n">table</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></span></em>, <em class="sig-param"><span class="n">as_of</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; pandas.core.frame.DataFrame<a class="headerlink" href="#doltpy.cli.read.read.read_pandas" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Read the contents of a table formatted as a <cite>pandas.DataFrame</cite>, optionally <cite>AS OF</cite> a commit, commit ref, or date.
+:param dolt:
+:param table: the table to read.
+:param as_of: a commit, commit ref, or date.
+:return: <cite>pd.DataFrame</cite> representing the table.</p>
+</dd></dl>
 
 <dl class="py function">
 <dt id="doltpy.cli.read.read.read_pandas_sql">
 <code class="sig-prename descclassname">doltpy.cli.read.read.</code><code class="sig-name descname">read_pandas_sql</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dolt</span><span class="p">:</span> <span class="n"><a class="reference internal" href="doltpy.cli.html#doltpy.cli.dolt.Dolt" title="doltpy.cli.dolt.Dolt">doltpy.cli.dolt.Dolt</a></span></em>, <em class="sig-param"><span class="n">sql</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></span></em><span class="sig-paren">)</span> &#x2192; pandas.core.frame.DataFrame<a class="headerlink" href="#doltpy.cli.read.read.read_pandas_sql" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Execute a SQL query and format the result as <cite>pandas.DataFrame</cite>.
+:param dolt:
+:param sql: the SQL query to execute.
+:return: <cite>pd.DataFrame</cite> representing the return value mapping as list of <cite>dict</cite>, one for each row.</p>
+</dd></dl>
 
 <dl class="py function">
 <dt id="doltpy.cli.read.read.read_rows">
 <code class="sig-prename descclassname">doltpy.cli.read.read.</code><code class="sig-name descname">read_rows</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dolt</span><span class="p">:</span> <span class="n"><a class="reference internal" href="doltpy.cli.html#doltpy.cli.dolt.Dolt" title="doltpy.cli.dolt.Dolt">doltpy.cli.dolt.Dolt</a></span></em>, <em class="sig-param"><span class="n">table</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></span></em>, <em class="sig-param"><span class="n">as_of</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; List<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)">dict</a><span class="p">]</span><a class="headerlink" href="#doltpy.cli.read.read.read_rows" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Read the contents of a table formatted into rows, optionally <cite>AS OF</cite> a commit, commit ref, or date.
+:param dolt:
+:param table: the table to read.
+:param as_of: a commit, commit ref, or date.
+:return: <cite>List[dict]</cite>, each <cite>dict</cite> representing a row.</p>
+</dd></dl>
 
 <dl class="py function">
 <dt id="doltpy.cli.read.read.read_rows_sql">
 <code class="sig-prename descclassname">doltpy.cli.read.read.</code><code class="sig-name descname">read_rows_sql</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dolt</span><span class="p">:</span> <span class="n"><a class="reference internal" href="doltpy.cli.html#doltpy.cli.dolt.Dolt" title="doltpy.cli.dolt.Dolt">doltpy.cli.dolt.Dolt</a></span></em>, <em class="sig-param"><span class="n">sql</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></span></em><span class="sig-paren">)</span> &#x2192; List<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)">dict</a><span class="p">]</span><a class="headerlink" href="#doltpy.cli.read.read.read_rows_sql" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Execute a SQL query and format the result as a list of rows, each represented by a <cite>dict</cite>.
+:param dolt:
+:param sql: the SQL query to execute.
+:return: <cite>List[dict]</cite> representing the return value mapping as list of <cite>dict</cite>, one for each row.</p>
+</dd></dl>
 
 </div>
 <div class="section" id="module-doltpy.cli.read">

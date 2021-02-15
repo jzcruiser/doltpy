@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>doltpy.sql package &#8212; Doltpy Documentation (0.1.x)</title>
+    <title>doltpy.sql package &#8212; Doltpy Documentation (1.1.x)</title>
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="_static/werkzeug.css" type="text/css" />
     <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -27,7 +27,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">Doltpy Documentation (0.1.x)</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Doltpy Documentation (1.1.x)</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">doltpy.sql package</a></li> 
       </ul>
     </div>  
@@ -76,16 +76,11 @@ to transform array valued data read from Postgres to Dolt.
 <dl class="py function">
 <dt id="doltpy.sql.helpers.get_existing_pks">
 <code class="sig-prename descclassname">doltpy.sql.helpers.</code><code class="sig-name descname">get_existing_pks</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">engine</span><span class="p">:</span> <span class="n">sqlalchemy.engine.base.Engine</span></em>, <em class="sig-param"><span class="n">table</span><span class="p">:</span> <span class="n">sqlalchemy.sql.schema.Table</span></em><span class="sig-paren">)</span> &#x2192; Mapping<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a><span class="p">, </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)">dict</a><span class="p">]</span><a class="headerlink" href="#doltpy.sql.helpers.get_existing_pks" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates an index of hashes of the values of the primary keys in the table provided.
-:param engine:
-:param table:
-:return:</p>
+<dd><p>Creates an index mapping hash of primary keys to the dicts representing the columns and their values.
+:param engine: SQL Alchemy <cite>Engine</cite> for the database being queried.
+:param table: <cite>Table</cite> instance to query.
+:return: <cite>Mapping[int, dict]</cite> mapping hash of primary key cols to dict representing column values.</p>
 </dd></dl>
-
-<dl class="py function">
-<dt id="doltpy.sql.helpers.get_inserts_and_updates">
-<code class="sig-prename descclassname">doltpy.sql.helpers.</code><code class="sig-name descname">get_inserts_and_updates</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">engine</span><span class="p">:</span> <span class="n">sqlalchemy.engine.base.Engine</span></em>, <em class="sig-param"><span class="n">table</span><span class="p">:</span> <span class="n">sqlalchemy.sql.schema.Table</span></em>, <em class="sig-param"><span class="n">data</span><span class="p">:</span> <span class="n">List<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)">dict</a><span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>List<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)">dict</a><span class="p">]</span><span class="p">, </span>List<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)">dict</a><span class="p">]</span><span class="p">]</span><a class="headerlink" href="#doltpy.sql.helpers.get_inserts_and_updates" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
 
 <dl class="py function">
 <dt id="doltpy.sql.helpers.hash_row_els">
@@ -95,7 +90,14 @@ to transform array valued data read from Postgres to Dolt.
 <dl class="py function">
 <dt id="doltpy.sql.helpers.infer_table_schema">
 <code class="sig-prename descclassname">doltpy.sql.helpers.</code><code class="sig-name descname">infer_table_schema</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">metadata</span><span class="p">:</span> <span class="n">sqlalchemy.sql.schema.MetaData</span></em>, <em class="sig-param"><span class="n">table_name</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></span></em>, <em class="sig-param"><span class="n">rows</span><span class="p">:</span> <span class="n">Iterable<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)">dict</a><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">primary_key</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>List<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span><span class="p">]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#doltpy.sql.helpers.infer_table_schema" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Creates a table using a schema inferred from the rows provided.</p>
+<p># TODO make primary keys optional.
+:param metadata: SQL Alchemy <cite>Metadata</cite> object representing the database we will create a table in.
+:param table_name: the name of the table to be created.
+:param rows: the data to use for inferring a schema.
+:param primary_key: the primary key for the table.
+:return:</p>
+</dd></dl>
 
 </div>
 <div class="section" id="module-doltpy.sql.sql">
@@ -106,9 +108,20 @@ to transform array valued data read from Postgres to Dolt.
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Represents metadata about a commit, including a ref, timestamp, and author, to make it easier to sort and present
 to the user.</p>
+<p># TODO merge with <cite>doltpy.cli.DoltCommit</cite></p>
 <dl class="py method">
 <dt id="doltpy.sql.sql.DoltCommit.append_merge_parent">
 <code class="sig-name descname">append_merge_parent</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">other_merge_parent</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#doltpy.sql.sql.DoltCommit.append_merge_parent" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="doltpy.sql.sql.DoltCommit.author">
+<code class="sig-name descname">author</code><em class="property">: <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></em><a class="headerlink" href="#doltpy.sql.sql.DoltCommit.author" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="doltpy.sql.sql.DoltCommit.email">
+<code class="sig-name descname">email</code><em class="property">: <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></em><a class="headerlink" href="#doltpy.sql.sql.DoltCommit.email" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -116,16 +129,55 @@ to the user.</p>
 <code class="sig-name descname">is_merge</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#doltpy.sql.sql.DoltCommit.is_merge" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="py attribute">
+<dt id="doltpy.sql.sql.DoltCommit.message">
+<code class="sig-name descname">message</code><em class="property">: <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></em><a class="headerlink" href="#doltpy.sql.sql.DoltCommit.message" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="doltpy.sql.sql.DoltCommit.parent_or_parents">
+<code class="sig-name descname">parent_or_parents</code><em class="property">: Optional<span class="p">[</span>Union<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">, </span>Tuple<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">, </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span><span class="p">]</span><span class="p">]</span></em><em class="property"> = None</em><a class="headerlink" href="#doltpy.sql.sql.DoltCommit.parent_or_parents" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="doltpy.sql.sql.DoltCommit.ref">
+<code class="sig-name descname">ref</code><em class="property">: <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></em><a class="headerlink" href="#doltpy.sql.sql.DoltCommit.ref" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="doltpy.sql.sql.DoltCommit.ts">
+<code class="sig-name descname">ts</code><em class="property">: <a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.9)">datetime.datetime</a></em><a class="headerlink" href="#doltpy.sql.sql.DoltCommit.ts" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
 <dt id="doltpy.sql.sql.DoltSQLContext">
-<em class="property">class </em><code class="sig-prename descclassname">doltpy.sql.sql.</code><code class="sig-name descname">DoltSQLContext</code><a class="headerlink" href="#doltpy.sql.sql.DoltSQLContext" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">doltpy.sql.sql.</code><code class="sig-name descname">DoltSQLContext</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dolt</span><span class="p">:</span> <span class="n"><a class="reference internal" href="doltpy.cli.html#doltpy.cli.dolt.Dolt" title="doltpy.cli.dolt.Dolt">doltpy.cli.dolt.Dolt</a></span></em>, <em class="sig-param"><span class="n">server_config</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#doltpy.sql.sql.ServerConfig" title="doltpy.sql.sql.ServerConfig">doltpy.sql.sql.ServerConfig</a></span></em>, <em class="sig-param"><span class="n">engine</span><span class="p">:</span> <span class="n">sqlalchemy.engine.base.Engine</span></em><span class="sig-paren">)</span><a class="headerlink" href="#doltpy.sql.sql.DoltSQLContext" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <dl class="py method">
 <dt id="doltpy.sql.sql.DoltSQLContext.commit_tables">
 <code class="sig-name descname">commit_tables</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">commit_message</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">table_or_tables</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>Union<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">, </span>List<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span><span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">allow_emtpy</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></span> <span class="o">=</span> <span class="default_value">False</span></em><span class="sig-paren">)</span> &#x2192; <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><a class="headerlink" href="#doltpy.sql.sql.DoltSQLContext.commit_tables" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Commit the list of table or list of tables specified by <cite>table_or_tables</cite>. If that parameter is omitted commits
+all tables in the working set.</p>
+<p>TODO: allow_empty to work
+:param commit_message: optionally specify a commit message.
+:param table_or_tables: the table or tables to commit.
+:param allow_emtpy: allow an empty commit.
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="doltpy.sql.sql.DoltSQLContext.diff">
+<code class="sig-name descname">diff</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">from_commit</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></span></em>, <em class="sig-param"><span class="n">to_commit</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></span></em>, <em class="sig-param"><span class="n">table_or_tables</span><span class="p">:</span> <span class="n">Union<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">, </span>List<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span><span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; Mapping<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">, </span>pandas.core.frame.DataFrame<span class="p">]</span><a class="headerlink" href="#doltpy.sql.sql.DoltSQLContext.diff" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uses Dolt’s <cite>dolt_diff_&lt;table&gt;</cite> system tables to return diffs between to arbitrary commits.</p>
+<p># TODO:
+#   we likely want to support committish semantics here, i.e. anything that can resolve to a commit
+:param from_commit: first commit.
+:param to_commit: second commit.
+:param table_or_tables: optionally specify a table or tables to limit the scope of this diff to.
+:return:</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt id="doltpy.sql.sql.DoltSQLContext.dolt">
@@ -139,43 +191,72 @@ to the user.</p>
 
 <dl class="py method">
 <dt id="doltpy.sql.sql.DoltSQLContext.execute">
-<code class="sig-name descname">execute</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sql</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></span></em>, <em class="sig-param"><span class="n">commit</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">commit_message</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">allow_emtpy</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></span> <span class="o">=</span> <span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#doltpy.sql.sql.DoltSQLContext.execute" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="sig-name descname">execute</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sql</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></span></em>, <em class="sig-param"><span class="n">commit</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">commit_message</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">allow_emtpy</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></span> <span class="o">=</span> <span class="default_value">False</span></em><span class="sig-paren">)</span> &#x2192; Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span><a class="headerlink" href="#doltpy.sql.sql.DoltSQLContext.execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Execute an arbitrary SQL statement, and optionally commit the results.
+:param sql: the SQL statement to execute
+:param commit: boolean indicating whether to commit any changes resulting from executing the provided query.
+:param commit_message: a message to associate with the commit.
+:param allow_emtpy: allow an empty commit to be created.
+:return: <cite>Optional[str]</cite> representing the commit hash of the commit created if <cite>commit</cite> is <cite>True</cite></p>
+</dd></dl>
 
 <dl class="py method">
 <dt id="doltpy.sql.sql.DoltSQLContext.log">
 <code class="sig-name descname">log</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <a class="reference external" href="https://docs.python.org/3/library/collections.html#collections.OrderedDict" title="(in Python v3.9)">collections.OrderedDict</a><a class="headerlink" href="#doltpy.sql.sql.DoltSQLContext.log" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Read the <cite>dolt_log</cite> table and use the results to populate <cite>DoltCommit</cite> objects.
+:return: <cite>OrderedDict</cite> mapping commit hashes to <cite>DoltCommit</cite> objects, ordered by creation timestamp.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt id="doltpy.sql.sql.DoltSQLContext.read_columns">
 <code class="sig-name descname">read_columns</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">table</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></span></em>, <em class="sig-param"><span class="n">as_of</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; Mapping<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">, </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)">list</a><span class="p">]</span><a class="headerlink" href="#doltpy.sql.sql.DoltSQLContext.read_columns" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Read the contents of a table formatted into columns, optionally <cite>AS OF</cite> a commit, commit ref, or date.
+:param table: the table to read.
+:param as_of: a commit, commit ref, or date.
+:return: <cite>Mapping[str, list]</cite> mapping column names to lists of values.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt id="doltpy.sql.sql.DoltSQLContext.read_columns_sql">
 <code class="sig-name descname">read_columns_sql</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sql</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></span></em><span class="sig-paren">)</span> &#x2192; Mapping<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">, </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)">list</a><span class="p">]</span><a class="headerlink" href="#doltpy.sql.sql.DoltSQLContext.read_columns_sql" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Execute a SQL query and format the result as a mapping of columns to lists of values.
+:param sql: the SQL query to execute.
+:return: <cite>Mapping[str, list]</cite> representing the return value mapping columns to lists of values..</p>
+</dd></dl>
 
 <dl class="py method">
 <dt id="doltpy.sql.sql.DoltSQLContext.read_pandas">
 <code class="sig-name descname">read_pandas</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">table</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></span></em>, <em class="sig-param"><span class="n">as_of</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; pandas.core.frame.DataFrame<a class="headerlink" href="#doltpy.sql.sql.DoltSQLContext.read_pandas" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Read the contents of a table formatted as a <cite>pandas.DataFrame</cite>, optionally <cite>AS OF</cite> a commit, commit ref, or date.
+:param table: the table to read.
+:param as_of: a commit, commit ref, or date.
+:return: <cite>pd.DataFrame</cite> representing the table.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt id="doltpy.sql.sql.DoltSQLContext.read_pandas_sql">
 <code class="sig-name descname">read_pandas_sql</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sql</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></span></em><span class="sig-paren">)</span> &#x2192; pandas.core.frame.DataFrame<a class="headerlink" href="#doltpy.sql.sql.DoltSQLContext.read_pandas_sql" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Execute a SQL query and format the result as <cite>pandas.DataFrame</cite>.
+:param sql: the SQL query to execute.
+:return: <cite>pd.DataFrame</cite> representing the return value mapping as list of <cite>dict</cite>, one for each row.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt id="doltpy.sql.sql.DoltSQLContext.read_rows">
 <code class="sig-name descname">read_rows</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">table</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></span></em>, <em class="sig-param"><span class="n">as_of</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; List<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)">dict</a><span class="p">]</span><a class="headerlink" href="#doltpy.sql.sql.DoltSQLContext.read_rows" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Read the contents of a table formatted into rows, optionally <cite>AS OF</cite> a commit, commit ref, or date.
+:param table: the table to read.
+:param as_of: a commit, commit ref, or date.
+:return: <cite>List[dict]</cite>, each <cite>dict</cite> representing a row.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt id="doltpy.sql.sql.DoltSQLContext.read_rows_sql">
 <code class="sig-name descname">read_rows_sql</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sql</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></span></em><span class="sig-paren">)</span> &#x2192; List<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)">dict</a><span class="p">]</span><a class="headerlink" href="#doltpy.sql.sql.DoltSQLContext.read_rows_sql" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Execute a SQL query and format the result as a list of rows, each represented by a <cite>dict</cite>.
+:param sql: the SQL query to execute.
+:return: <cite>List[dict]</cite> representing the return value mapping as list of <cite>dict</cite>, one for each row.</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt id="doltpy.sql.sql.DoltSQLContext.server_config">
@@ -185,32 +266,79 @@ to the user.</p>
 <dl class="py method">
 <dt id="doltpy.sql.sql.DoltSQLContext.verify_connection">
 <code class="sig-name descname">verify_connection</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a><a class="headerlink" href="#doltpy.sql.sql.DoltSQLContext.verify_connection" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="doltpy.sql.sql.DoltSQLContext.write_batch">
-<code class="sig-name descname">write_batch</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">table</span><span class="p">:</span> <span class="n">sqlalchemy.sql.schema.Table</span></em>, <em class="sig-param"><span class="n">rows</span><span class="p">:</span> <span class="n">List<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)">dict</a><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">on_duplicate_key_update</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#doltpy.sql.sql.DoltSQLContext.write_batch" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>This function verifies that the Dolt SQL Server is running and accepting connections, and is a general way
+around inserting <cite>time.sleep</cite> calls into Python code that manages server processes.
+:return:</p>
+</dd></dl>
 
 <dl class="py method">
 <dt id="doltpy.sql.sql.DoltSQLContext.write_columns">
-<code class="sig-name descname">write_columns</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">table</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></span></em>, <em class="sig-param"><span class="n">columns</span><span class="p">:</span> <span class="n">Mapping<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">, </span>List<span class="p">[</span>Any<span class="p">]</span><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">on_duplicate_key_update</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></span> <span class="o">=</span> <span class="default_value">True</span></em>, <em class="sig-param"><span class="n">create_if_not_exists</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">primary_key</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>List<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">commit</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></span> <span class="o">=</span> <span class="default_value">True</span></em>, <em class="sig-param"><span class="n">commit_message</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">commit_date</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.9)">datetime.datetime</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">allow_empty</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">batch_size</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a></span> <span class="o">=</span> <span class="default_value">100000</span></em><span class="sig-paren">)</span><a class="headerlink" href="#doltpy.sql.sql.DoltSQLContext.write_columns" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="sig-name descname">write_columns</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">table</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></span></em>, <em class="sig-param"><span class="n">columns</span><span class="p">:</span> <span class="n">Mapping<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">, </span>List<span class="p">[</span>Any<span class="p">]</span><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">on_duplicate_key_update</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></span> <span class="o">=</span> <span class="default_value">True</span></em>, <em class="sig-param"><span class="n">create_if_not_exists</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">primary_key</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>List<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">commit</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></span> <span class="o">=</span> <span class="default_value">True</span></em>, <em class="sig-param"><span class="n">commit_message</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">commit_date</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.9)">datetime.datetime</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">allow_empty</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">batch_size</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a></span> <span class="o">=</span> <span class="default_value">100000</span></em><span class="sig-paren">)</span> &#x2192; Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span><a class="headerlink" href="#doltpy.sql.sql.DoltSQLContext.write_columns" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes columnar data to the Dolt database <cite>self.engine</cite> is configured to connect to.
+:param table: tha name of the table to write to.
+:param columns: the columnar data to write, a map of column names to arrays of values.
+:param on_duplicate_key_update: specify whether to update when duplicate key is found, defaults <cite>True</cite>.
+:param create_if_not_exists: if the specified table does not exist, infer a schema and create it.
+:param primary_key: optionally specify a primary key used if the table is being created.
+:param commit: create a commit associated with the write to this table.
+:param commit_message: a commit message to associate with the created commit.
+:param commit_date: override the date associated with the created commit.
+:param allow_empty: allow an empty commit to be created.
+:param batch_size: the batch size for writing data.
+:return: <cite>Optional[str]</cite>, is a string representing the commit hash when <cite>commit</cite> is <cite>True</cite>, <cite>None</cite> otherwise.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt id="doltpy.sql.sql.DoltSQLContext.write_file">
-<code class="sig-name descname">write_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">table</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></span></em>, <em class="sig-param"><span class="n">file_path</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></span></em>, <em class="sig-param"><span class="n">on_duplicate_key_update</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></span> <span class="o">=</span> <span class="default_value">True</span></em>, <em class="sig-param"><span class="n">create_if_not_exists</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">primary_key</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>List<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">commit</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></span> <span class="o">=</span> <span class="default_value">True</span></em>, <em class="sig-param"><span class="n">commit_message</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">commit_date</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.9)">datetime.datetime</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">allow_empty</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">batch_size</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a></span> <span class="o">=</span> <span class="default_value">100000</span></em><span class="sig-paren">)</span><a class="headerlink" href="#doltpy.sql.sql.DoltSQLContext.write_file" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="sig-name descname">write_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">table</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></span></em>, <em class="sig-param"><span class="n">file_path</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></span></em>, <em class="sig-param"><span class="n">on_duplicate_key_update</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></span> <span class="o">=</span> <span class="default_value">True</span></em>, <em class="sig-param"><span class="n">create_if_not_exists</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">primary_key</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>List<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">commit</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></span> <span class="o">=</span> <span class="default_value">True</span></em>, <em class="sig-param"><span class="n">commit_message</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">commit_date</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.9)">datetime.datetime</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">allow_empty</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">batch_size</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a></span> <span class="o">=</span> <span class="default_value">100000</span></em><span class="sig-paren">)</span> &#x2192; Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span><a class="headerlink" href="#doltpy.sql.sql.DoltSQLContext.write_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes data in a file to the Dolt database <cite>self.engine</cite> is configured to connect to.</p>
+<p>At the moment only CSV files are supported.
+:param table: tha name of the table to write to.
+:param file_path: the file to be written.
+:param on_duplicate_key_update: specify whether to update when duplicate key is found, defaults <cite>True</cite>.
+:param create_if_not_exists: if the specified table does not exist, infer a schema and create it.
+:param primary_key: optionally specify a primary key used if the table is being created.
+:param commit: create a commit associated with the write to this table.
+:param commit_message: a commit message to associate with the created commit.
+:param commit_date: override the date associated with the created commit.
+:param allow_empty: allow an empty commit to be created.
+:param batch_size: the batch size for writing data.
+:return: <cite>Optional[str]</cite>, is a string representing the commit hash when <cite>commit</cite> is <cite>True</cite>, <cite>None</cite> otherwise.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt id="doltpy.sql.sql.DoltSQLContext.write_pandas">
-<code class="sig-name descname">write_pandas</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">table</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></span></em>, <em class="sig-param"><span class="n">df</span><span class="p">:</span> <span class="n">pandas.core.frame.DataFrame</span></em>, <em class="sig-param"><span class="n">on_duplicate_key_update</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></span> <span class="o">=</span> <span class="default_value">True</span></em>, <em class="sig-param"><span class="n">create_if_not_exists</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">primary_key</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>List<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">commit</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">commit_message</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">commit_date</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.9)">datetime.datetime</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">allow_empty</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">batch_size</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a></span> <span class="o">=</span> <span class="default_value">100000</span></em><span class="sig-paren">)</span><a class="headerlink" href="#doltpy.sql.sql.DoltSQLContext.write_pandas" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="sig-name descname">write_pandas</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">table</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></span></em>, <em class="sig-param"><span class="n">df</span><span class="p">:</span> <span class="n">pandas.core.frame.DataFrame</span></em>, <em class="sig-param"><span class="n">on_duplicate_key_update</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></span> <span class="o">=</span> <span class="default_value">True</span></em>, <em class="sig-param"><span class="n">create_if_not_exists</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">primary_key</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>List<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">commit</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">commit_message</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">commit_date</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.9)">datetime.datetime</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">allow_empty</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">batch_size</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a></span> <span class="o">=</span> <span class="default_value">100000</span></em><span class="sig-paren">)</span> &#x2192; Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span><a class="headerlink" href="#doltpy.sql.sql.DoltSQLContext.write_pandas" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes a <cite>pandas.DataFrame</cite> to the Dolt database <cite>self.engine</cite> is connected to.
+:param table: tha name of the table to write to.
+:param df: the <cite>pandas.DataFrame</cite> to be written.
+:param on_duplicate_key_update: specify whether to update when duplicate key is found, defaults <cite>True</cite>.
+:param create_if_not_exists: if the specified table does not exist, infer a schema and create it.
+:param primary_key: optionally specify a primary key used if the table is being created.
+:param commit: create a commit associated with the write to this table.
+:param commit_message: a commit message to associate with the created commit.
+:param commit_date: override the date associated with the created commit.
+:param allow_empty: allow an empty commit to be created.
+:param batch_size: the batch size for writing data.
+:return: <cite>Optional[str]</cite>, is a string representing the commit hash when <cite>commit</cite> is <cite>True</cite>, <cite>None</cite> otherwise.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt id="doltpy.sql.sql.DoltSQLContext.write_rows">
-<code class="sig-name descname">write_rows</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">table_name</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></span></em>, <em class="sig-param"><span class="n">rows</span><span class="p">:</span> <span class="n">Iterable<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)">dict</a><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">on_duplicate_key_update</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></span> <span class="o">=</span> <span class="default_value">True</span></em>, <em class="sig-param"><span class="n">create_if_not_exists</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">primary_key</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>List<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">commit</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">commit_message</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">commit_date</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.9)">datetime.datetime</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">allow_empty</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">batch_size</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a></span> <span class="o">=</span> <span class="default_value">100000</span></em><span class="sig-paren">)</span><a class="headerlink" href="#doltpy.sql.sql.DoltSQLContext.write_rows" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="sig-name descname">write_rows</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">table</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></span></em>, <em class="sig-param"><span class="n">rows</span><span class="p">:</span> <span class="n">Iterable<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)">dict</a><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">on_duplicate_key_update</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></span> <span class="o">=</span> <span class="default_value">True</span></em>, <em class="sig-param"><span class="n">create_if_not_exists</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">primary_key</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>List<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">commit</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">commit_message</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">commit_date</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.9)">datetime.datetime</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">allow_empty</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">batch_size</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a></span> <span class="o">=</span> <span class="default_value">100000</span></em><span class="sig-paren">)</span> &#x2192; Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span><a class="headerlink" href="#doltpy.sql.sql.DoltSQLContext.write_rows" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes a list of rows, each represented by a dictionary, to the Dolt database <cite>self.engine</cite> is connected to.
+:param table: tha name of the table to write to.
+:param rows: the list of dictionaries, each representing a row, to be written.
+:param on_duplicate_key_update: specify whether to update when duplicate key is found, defaults <cite>True</cite>.
+:param create_if_not_exists: if the specified table does not exist, infer a schema and create it.
+:param primary_key: optionally specify a primary key used if the table is being created.
+:param commit: create a commit associated with the write to this table.
+:param commit_message: a commit message to associate with the created commit.
+:param commit_date: override the date associated with the created commit.
+:param allow_empty: allow an empty commit to be created.
+:param batch_size: the batch size for writing data.
+:return: <cite>Optional[str]</cite>, is a string representing the commit hash when <cite>commit</cite> is <cite>True</cite>, <cite>None</cite> otherwise.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -257,16 +385,14 @@ to the user.</p>
 <dl class="py method">
 <dt id="doltpy.sql.sql.DoltSQLServerContext.start_server">
 <code class="sig-name descname">start_server</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#doltpy.sql.sql.DoltSQLServerContext.start_server" title="Permalink to this definition">¶</a></dt>
-<dd><p>Start a MySQL Server process on local host using the parameters to configure behavior. The parameters are
-self-explanatory, but the config is a way to provide them as a YAML file rather than as function
-arguments.
+<dd><p>Start a Dolt SQL Server process. The configurations are read from <cite>self.server_config</cite>.
 :return:</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="doltpy.sql.sql.DoltSQLServerContext.stop_server">
 <code class="sig-name descname">stop_server</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#doltpy.sql.sql.DoltSQLServerContext.stop_server" title="Permalink to this definition">¶</a></dt>
-<dd><p>Stop the MySQL Server process this repo is running.
+<dd><p>Stop the MySQL Server process referenced in <cite>self.server</cite>.
 :return:</p>
 </dd></dl>
 
@@ -274,8 +400,68 @@ arguments.
 
 <dl class="py class">
 <dt id="doltpy.sql.sql.ServerConfig">
-<em class="property">class </em><code class="sig-prename descclassname">doltpy.sql.sql.</code><code class="sig-name descname">ServerConfig</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">branch</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">config</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">host</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></span> <span class="o">=</span> <span class="default_value">'127.0.0.1'</span></em>, <em class="sig-param"><span class="n">port</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a></span> <span class="o">=</span> <span class="default_value">3306</span></em>, <em class="sig-param"><span class="n">user</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">password</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">timeout</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">readonly</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">loglevel</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">multi_db_dir</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">no_auto_commit</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">echo</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></span> <span class="o">=</span> <span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#doltpy.sql.sql.ServerConfig" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">doltpy.sql.sql.</code><code class="sig-name descname">ServerConfig</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">branch</span><span class="p">:</span> <span class="n">Union<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">, </span>NoneType<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">config</span><span class="p">:</span> <span class="n">Union<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">, </span>NoneType<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">host</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></span> <span class="o">=</span> <span class="default_value">'127.0.0.1'</span></em>, <em class="sig-param"><span class="n">port</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a></span> <span class="o">=</span> <span class="default_value">3306</span></em>, <em class="sig-param"><span class="n">user</span><span class="p">:</span> <span class="n">Union<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">, </span>NoneType<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">password</span><span class="p">:</span> <span class="n">Union<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">, </span>NoneType<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">timeout</span><span class="p">:</span> <span class="n">Union<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a><span class="p">, </span>NoneType<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">readonly</span><span class="p">:</span> <span class="n">Union<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a><span class="p">, </span>NoneType<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">loglevel</span><span class="p">:</span> <span class="n">Union<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">, </span>NoneType<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">multi_db_dir</span><span class="p">:</span> <span class="n">Union<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">, </span>NoneType<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">no_auto_commit</span><span class="p">:</span> <span class="n">Union<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a><span class="p">, </span>NoneType<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">echo</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></span> <span class="o">=</span> <span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#doltpy.sql.sql.ServerConfig" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dl class="py attribute">
+<dt id="doltpy.sql.sql.ServerConfig.branch">
+<code class="sig-name descname">branch</code><em class="property">: Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span></em><em class="property"> = None</em><a class="headerlink" href="#doltpy.sql.sql.ServerConfig.branch" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="doltpy.sql.sql.ServerConfig.config">
+<code class="sig-name descname">config</code><em class="property">: Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span></em><em class="property"> = None</em><a class="headerlink" href="#doltpy.sql.sql.ServerConfig.config" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="doltpy.sql.sql.ServerConfig.echo">
+<code class="sig-name descname">echo</code><em class="property">: <a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></em><em class="property"> = False</em><a class="headerlink" href="#doltpy.sql.sql.ServerConfig.echo" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="doltpy.sql.sql.ServerConfig.host">
+<code class="sig-name descname">host</code><em class="property">: <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></em><em class="property"> = '127.0.0.1'</em><a class="headerlink" href="#doltpy.sql.sql.ServerConfig.host" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="doltpy.sql.sql.ServerConfig.loglevel">
+<code class="sig-name descname">loglevel</code><em class="property">: Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span></em><em class="property"> = None</em><a class="headerlink" href="#doltpy.sql.sql.ServerConfig.loglevel" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="doltpy.sql.sql.ServerConfig.multi_db_dir">
+<code class="sig-name descname">multi_db_dir</code><em class="property">: Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span></em><em class="property"> = None</em><a class="headerlink" href="#doltpy.sql.sql.ServerConfig.multi_db_dir" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="doltpy.sql.sql.ServerConfig.no_auto_commit">
+<code class="sig-name descname">no_auto_commit</code><em class="property">: Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a><span class="p">]</span></em><em class="property"> = None</em><a class="headerlink" href="#doltpy.sql.sql.ServerConfig.no_auto_commit" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="doltpy.sql.sql.ServerConfig.password">
+<code class="sig-name descname">password</code><em class="property">: Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span></em><em class="property"> = None</em><a class="headerlink" href="#doltpy.sql.sql.ServerConfig.password" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="doltpy.sql.sql.ServerConfig.port">
+<code class="sig-name descname">port</code><em class="property">: <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a></em><em class="property"> = 3306</em><a class="headerlink" href="#doltpy.sql.sql.ServerConfig.port" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="doltpy.sql.sql.ServerConfig.readonly">
+<code class="sig-name descname">readonly</code><em class="property">: Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a><span class="p">]</span></em><em class="property"> = None</em><a class="headerlink" href="#doltpy.sql.sql.ServerConfig.readonly" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="doltpy.sql.sql.ServerConfig.timeout">
+<code class="sig-name descname">timeout</code><em class="property">: Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a><span class="p">]</span></em><em class="property"> = None</em><a class="headerlink" href="#doltpy.sql.sql.ServerConfig.timeout" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="doltpy.sql.sql.ServerConfig.user">
+<code class="sig-name descname">user</code><em class="property">: Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span></em><em class="property"> = None</em><a class="headerlink" href="#doltpy.sql.sql.ServerConfig.user" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 </div>

@@ -432,7 +432,7 @@ Bases: [`object`](https://docs.python.org/3/library/functions.html#object)
 Represents a branch, along with the commit it points to.
 
 
-### class doltpy.cli.dolt.DoltCommit(ref: [str](https://docs.python.org/3/library/stdtypes.html#str), ts: [datetime.datetime](https://docs.python.org/3/library/datetime.html#datetime.datetime), author: [str](https://docs.python.org/3/library/stdtypes.html#str), message: [str](https://docs.python.org/3/library/stdtypes.html#str), merge: Optional[Tuple[[str](https://docs.python.org/3/library/stdtypes.html#str), [str](https://docs.python.org/3/library/stdtypes.html#str)]] = None)
+### class doltpy.cli.dolt.DoltCommit(ref: [str](https://docs.python.org/3/library/stdtypes.html#str), ts: [datetime.datetime](https://docs.python.org/3/library/datetime.html#datetime.datetime), author: [str](https://docs.python.org/3/library/stdtypes.html#str), message: [str](https://docs.python.org/3/library/stdtypes.html#str), merge: Optional[Tuple[[str](https://docs.python.org/3/library/stdtypes.html#str), …]] = None)
 Bases: [`object`](https://docs.python.org/3/library/functions.html#object)
 
 Represents metadata about a commit, including a ref, timestamp, and author, to make it easier to sort and present
@@ -443,7 +443,7 @@ to the user.
 Bases: [`Exception`](https://docs.python.org/3/library/exceptions.html#Exception)
 
 
-### exception doltpy.cli.dolt.DoltException(exec_args, stdout, stderr, exitcode)
+### exception doltpy.cli.dolt.DoltException(exec_args, stdout: Optional[Union[[str](https://docs.python.org/3/library/stdtypes.html#str), [bytes](https://docs.python.org/3/library/stdtypes.html#bytes)]] = None, stderr: Optional[Union[[str](https://docs.python.org/3/library/stdtypes.html#str), [bytes](https://docs.python.org/3/library/stdtypes.html#bytes)]] = None, exitcode: Optional[[int](https://docs.python.org/3/library/functions.html#int)] = 1)
 Bases: [`Exception`](https://docs.python.org/3/library/exceptions.html#Exception)
 
 A class representing a Dolt exception.

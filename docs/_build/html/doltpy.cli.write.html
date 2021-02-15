@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>doltpy.cli.write package &#8212; Doltpy Documentation (0.1.x)</title>
+    <title>doltpy.cli.write package &#8212; Doltpy Documentation (1.1.x)</title>
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="_static/werkzeug.css" type="text/css" />
     <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -27,7 +27,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">Doltpy Documentation (0.1.x)</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Doltpy Documentation (1.1.x)</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">doltpy.cli.write package</a></li> 
       </ul>
     </div>  
@@ -47,72 +47,62 @@
 <dl class="py function">
 <dt id="doltpy.cli.write.write.write_columns">
 <code class="sig-prename descclassname">doltpy.cli.write.write.</code><code class="sig-name descname">write_columns</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dolt</span><span class="p">:</span> <span class="n"><a class="reference internal" href="doltpy.cli.html#doltpy.cli.dolt.Dolt" title="doltpy.cli.dolt.Dolt">doltpy.cli.dolt.Dolt</a></span></em>, <em class="sig-param"><span class="n">table</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></span></em>, <em class="sig-param"><span class="n">columns</span><span class="p">:</span> <span class="n">Mapping<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">, </span>List<span class="p">[</span>Any<span class="p">]</span><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">import_mode</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">primary_key</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>List<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">commit</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">commit_message</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">commit_date</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.9)">datetime.datetime</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#doltpy.cli.write.write.write_columns" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>dolt</strong> – </p></li>
-<li><p><strong>table</strong> – </p></li>
-<li><p><strong>columns</strong> – </p></li>
-<li><p><strong>import_mode</strong> – </p></li>
-<li><p><strong>primary_key</strong> – </p></li>
-<li><p><strong>commit</strong> – </p></li>
-<li><p><strong>commit_message</strong> – </p></li>
-<li><p><strong>commit_date</strong> – </p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p></p>
-</dd>
-</dl>
+<dd><p>Write columnar formatted data to a Dolt table, and optinally create a commit.
+:param dolt: an instance of <cite>Dolt</cite> representing the database to write to.
+:param table: the name of the table to write to.
+:param columns: a mapping of column names to values.
+:param import_mode: one of “create”, “force_create”, “replace”, “update”.
+:param primary_key: the primary key, applicable when import mode is “create”.
+:param commit: boolean flag indicating whether to create a commit for the write.
+:param commit_message: a commit message to use when <cite>commit</cite> is <cite>True</cite>.
+:param commit_date: override the date associated with the commit.
+:return:</p>
 </dd></dl>
 
 <dl class="py function">
 <dt id="doltpy.cli.write.write.write_file">
 <code class="sig-prename descclassname">doltpy.cli.write.write.</code><code class="sig-name descname">write_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dolt</span><span class="p">:</span> <span class="n"><a class="reference internal" href="doltpy.cli.html#doltpy.cli.dolt.Dolt" title="doltpy.cli.dolt.Dolt">doltpy.cli.dolt.Dolt</a></span></em>, <em class="sig-param"><span class="n">table</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></span></em>, <em class="sig-param"><span class="n">file_handle</span><span class="p">:</span> <span class="n">_io.StringIO</span></em>, <em class="sig-param"><span class="n">filetype</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></span> <span class="o">=</span> <span class="default_value">'csv'</span></em>, <em class="sig-param"><span class="n">import_mode</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">primary_key</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>List<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">commit</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">commit_message</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">commit_date</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.9)">datetime.datetime</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#doltpy.cli.write.write.write_file" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Write a file to a Dolt table, currently restricted to CSV files.
+:param dolt: an instance of <cite>Dolt</cite> representing the database to write to.
+:param table: the name of the table to write to.
+:param file_handle: a file handle for reading data to be imported.
+:param filetype: the file format being imported, currently limited to CSV.
+:param import_mode: one of “create”, “force_create”, “replace”, “update”.
+:param primary_key: the primary key, applicable when import mode is “create”.
+:param commit: boolean flag indicating whether to create a commit for the write.
+:param commit_message: a commit message to use when <cite>commit</cite> is <cite>True</cite>.
+:param commit_date: override the date associated with the commit.
+:return:</p>
+</dd></dl>
 
 <dl class="py function">
 <dt id="doltpy.cli.write.write.write_pandas">
 <code class="sig-prename descclassname">doltpy.cli.write.write.</code><code class="sig-name descname">write_pandas</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dolt</span><span class="p">:</span> <span class="n"><a class="reference internal" href="doltpy.cli.html#doltpy.cli.dolt.Dolt" title="doltpy.cli.dolt.Dolt">doltpy.cli.dolt.Dolt</a></span></em>, <em class="sig-param"><span class="n">table</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></span></em>, <em class="sig-param"><span class="n">df</span><span class="p">:</span> <span class="n">pandas.core.frame.DataFrame</span></em>, <em class="sig-param"><span class="n">import_mode</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">primary_key</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>List<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">commit</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">commit_message</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">commit_date</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.9)">datetime.datetime</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#doltpy.cli.write.write.write_pandas" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>dolt</strong> – </p></li>
-<li><p><strong>table</strong> – </p></li>
-<li><p><strong>df</strong> – </p></li>
-<li><p><strong>import_mode</strong> – </p></li>
-<li><p><strong>primary_key</strong> – </p></li>
-<li><p><strong>commit</strong> – </p></li>
-<li><p><strong>commit_message</strong> – </p></li>
-<li><p><strong>commit_date</strong> – </p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p></p>
-</dd>
-</dl>
+<dd><p>Write a list of rows, represented by dictionaries, to a Dolt table. Optionally create a commit.
+:param dolt: an instance of <cite>Dolt</cite> representing the database to write to.
+:param table: the name of the table to write to.
+:param df: the <cite>pandas.DataFrame</cite> to write.
+:param import_mode: one of “create”, “force_create”, “replace”, “update”.
+:param primary_key: the primary key, applicable when import mode is “create”.
+:param commit: boolean flag indicating whether to create a commit for the write.
+:param commit_message: a commit message to use when <cite>commit</cite> is <cite>True</cite>.
+:param commit_date: override the date associated with the commit.
+:return:</p>
 </dd></dl>
 
 <dl class="py function">
 <dt id="doltpy.cli.write.write.write_rows">
 <code class="sig-prename descclassname">doltpy.cli.write.write.</code><code class="sig-name descname">write_rows</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dolt</span><span class="p">:</span> <span class="n"><a class="reference internal" href="doltpy.cli.html#doltpy.cli.dolt.Dolt" title="doltpy.cli.dolt.Dolt">doltpy.cli.dolt.Dolt</a></span></em>, <em class="sig-param"><span class="n">table</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></span></em>, <em class="sig-param"><span class="n">rows</span><span class="p">:</span> <span class="n">List<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)">dict</a><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">import_mode</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">primary_key</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>List<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">commit</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">commit_message</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">commit_date</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.9)">datetime.datetime</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#doltpy.cli.write.write.write_rows" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>dolt</strong> – </p></li>
-<li><p><strong>table</strong> – </p></li>
-<li><p><strong>rows</strong> – </p></li>
-<li><p><strong>import_mode</strong> – </p></li>
-<li><p><strong>primary_key</strong> – </p></li>
-<li><p><strong>commit</strong> – </p></li>
-<li><p><strong>commit_message</strong> – </p></li>
-<li><p><strong>commit_date</strong> – </p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p></p>
-</dd>
-</dl>
+<dd><p>Write a list of rows, represented by dictionaries, to a Dolt table. Optionally create a commit.
+:param dolt: an instance of <cite>Dolt</cite> representing the database to write to.
+:param table: the name of the table to write to.
+:param rows: list of dictionaries, each representing a row mapping columns to values.
+:param import_mode: one of “create”, “force_create”, “replace”, “update”.
+:param primary_key: the primary key, applicable when import mode is “create”.
+:param commit: boolean flag indicating whether to create a commit for the write.
+:param commit_message: a commit message to use when <cite>commit</cite> is <cite>True</cite>.
+:param commit_date: override the date associated with the commit.
+:return:</p>
 </dd></dl>
 
 </div>

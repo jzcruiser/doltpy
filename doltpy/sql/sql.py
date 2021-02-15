@@ -1,4 +1,3 @@
-import copy
 from collections import OrderedDict
 from dataclasses import dataclass
 import csv
@@ -7,7 +6,6 @@ import math
 import os
 import datetime
 
-# from doltpy.shared import SQL_LOG_FILE
 from subprocess import STDOUT, Popen
 from typing import Any, Iterable, List, Mapping, Union, Optional, Tuple
 
@@ -51,6 +49,8 @@ class DoltCommit:
     """
     Represents metadata about a commit, including a ref, timestamp, and author, to make it easier to sort and present
     to the user.
+
+    # TODO merge with `doltpy.cli.DoltCommit`
     """
 
     ref: str
@@ -92,13 +92,7 @@ class DoltSQLContext:
 
         logger.info(f"Creating engine for Dolt SQL Server instance running on {host}:{port}")
 
-        def inner():
-            return create_engine(
-                f"mysql+mysqlconnector://{user}@{host}:{port}/{database}",
-                echo=self.server_config.echo,
-            )
-
-        return inner()
+        return create_engine(f"mysql+mysqlconnector://{user}@{host}:{port}/{database}", echo=self.server_config.echo)
 
     @retry(
         delay=2,
@@ -110,6 +104,11 @@ class DoltSQLContext:
         ),
     )
     def verify_connection(self) -> bool:
+        """
+        This function verifies that the Dolt SQL Server is running and accepting connections, and is a general way
+        around inserting `time.sleep` calls into Python code that manages server processes.
+        :return:
+        """
         with self.engine.connect() as conn:
             conn.close()
             return True
@@ -120,6 +119,16 @@ class DoltSQLContext:
         table_or_tables: Optional[Union[str, List[str]]] = None,
         allow_emtpy: bool = False,
     ) -> str:
+        """
+        Commit the list of table or list of tables specified by `table_or_tables`. If that parameter is omitted commits
+        all tables in the working set.
+
+        TODO: allow_empty to work
+        :param commit_message: optionally specify a commit message.
+        :param table_or_tables: the table or tables to commit.
+        :param allow_emtpy: allow an empty commit.
+        :return:
+        """
         tables = to_list(table_or_tables)
 
         with self.engine.connect() as conn:
@@ -140,6 +149,14 @@ class DoltSQLContext:
         commit_message: Optional[str] = None,
         allow_emtpy: bool = False,
     ) -> Optional[str]:
+        """
+        Execute an arbitrary SQL statement, and optionally commit the results.
+        :param sql: the SQL statement to execute
+        :param commit: boolean indicating whether to commit any changes resulting from executing the provided query.
+        :param commit_message: a message to associate with the commit.
+        :param allow_emtpy: allow an empty commit to be created.
+        :return: `Optional[str]` representing the commit hash of the commit created if `commit` is `True`
+        """
         with self.engine.connect() as conn:
             conn.execute(sql)
 
@@ -162,8 +179,21 @@ class DoltSQLContext:
         commit_date: Optional[datetime.datetime] = None,
         allow_empty: bool = False,
         batch_size: int = DEFAULT_BATCH_SIZE,
-    ):
-
+    ) -> Optional[str]:
+        """
+        Writes columnar data to the Dolt database `self.engine` is configured to connect to.
+        :param table: tha name of the table to write to.
+        :param columns: the columnar data to write, a map of column names to arrays of values.
+        :param on_duplicate_key_update: specify whether to update when duplicate key is found, defaults `True`.
+        :param create_if_not_exists: if the specified table does not exist, infer a schema and create it.
+        :param primary_key: optionally specify a primary key used if the table is being created.
+        :param commit: create a commit associated with the write to this table.
+        :param commit_message: a commit message to associate with the created commit.
+        :param commit_date: override the date associated with the created commit.
+        :param allow_empty: allow an empty commit to be created.
+        :param batch_size: the batch size for writing data.
+        :return: `Optional[str]`, is a string representing the commit hash when `commit` is `True`, `None` otherwise.
+        """
         rows = columns_to_rows(columns)
         return self.write_rows(
             table,
@@ -190,8 +220,23 @@ class DoltSQLContext:
         commit_date: Optional[datetime.datetime] = None,
         allow_empty: bool = False,
         batch_size: int = DEFAULT_BATCH_SIZE,
-    ):
+    ) -> Optional[str]:
+        """
+        Writes data in a file to the Dolt database `self.engine` is configured to connect to.
 
+        At the moment only CSV files are supported.
+        :param table: tha name of the table to write to.
+        :param file_path: the file to be written.
+        :param on_duplicate_key_update: specify whether to update when duplicate key is found, defaults `True`.
+        :param create_if_not_exists: if the specified table does not exist, infer a schema and create it.
+        :param primary_key: optionally specify a primary key used if the table is being created.
+        :param commit: create a commit associated with the write to this table.
+        :param commit_message: a commit message to associate with the created commit.
+        :param commit_date: override the date associated with the created commit.
+        :param allow_empty: allow an empty commit to be created.
+        :param batch_size: the batch size for writing data.
+        :return: `Optional[str]`, is a string representing the commit hash when `commit` is `True`, `None` otherwise.
+        """
         with open(file_path, "r") as file_handle:
             reader = csv.DictReader(file_handle)
             rows = [row for row in reader]
@@ -220,7 +265,21 @@ class DoltSQLContext:
         commit_date: Optional[datetime.datetime] = None,
         allow_empty: bool = False,
         batch_size: int = DEFAULT_BATCH_SIZE,
-    ):
+    ) -> Optional[str]:
+        """
+        Writes a `pandas.DataFrame` to the Dolt database `self.engine` is connected to.
+        :param table: tha name of the table to write to.
+        :param df: the `pandas.DataFrame` to be written.
+        :param on_duplicate_key_update: specify whether to update when duplicate key is found, defaults `True`.
+        :param create_if_not_exists: if the specified table does not exist, infer a schema and create it.
+        :param primary_key: optionally specify a primary key used if the table is being created.
+        :param commit: create a commit associated with the write to this table.
+        :param commit_message: a commit message to associate with the created commit.
+        :param commit_date: override the date associated with the created commit.
+        :param allow_empty: allow an empty commit to be created.
+        :param batch_size: the batch size for writing data.
+        :return: `Optional[str]`, is a string representing the commit hash when `commit` is `True`, `None` otherwise.
+        """
         dt_columns = df.select_dtypes(include=[np.datetime64]).columns
         rows = df.to_dict("records")
 
@@ -244,7 +303,7 @@ class DoltSQLContext:
 
     def write_rows(
         self,
-        table_name: str,
+        table: str,
         rows: Iterable[dict],
         on_duplicate_key_update: bool = True,
         create_if_not_exists: bool = False,
@@ -254,16 +313,29 @@ class DoltSQLContext:
         commit_date: Optional[datetime.datetime] = None,
         allow_empty: bool = False,
         batch_size: int = DEFAULT_BATCH_SIZE,
-    ):
-
+    ) -> Optional[str]:
+        """
+        Writes a list of rows, each represented by a dictionary, to the Dolt database `self.engine` is connected to.
+        :param table: tha name of the table to write to.
+        :param rows: the list of dictionaries, each representing a row, to be written.
+        :param on_duplicate_key_update: specify whether to update when duplicate key is found, defaults `True`.
+        :param create_if_not_exists: if the specified table does not exist, infer a schema and create it.
+        :param primary_key: optionally specify a primary key used if the table is being created.
+        :param commit: create a commit associated with the write to this table.
+        :param commit_message: a commit message to associate with the created commit.
+        :param commit_date: override the date associated with the created commit.
+        :param allow_empty: allow an empty commit to be created.
+        :param batch_size: the batch size for writing data.
+        :return: `Optional[str]`, is a string representing the commit hash when `commit` is `True`, `None` otherwise.
+        """
         metadata = sa.MetaData(bind=self.engine)
         metadata.reflect()
 
-        if table_name not in metadata.tables and create_if_not_exists:
-            infer_table_schema(metadata, table_name, rows, primary_key)
+        if table not in metadata.tables and create_if_not_exists:
+            infer_table_schema(metadata, table, rows, primary_key)
             metadata.reflect()
 
-        table = metadata.tables[table_name]
+        db_table = metadata.tables[table]
 
         rows = list(rows)
         for i in range(max(1, math.ceil(len(rows) / batch_size))):
@@ -271,10 +343,10 @@ class DoltSQLContext:
             batch_end = min((i + 1) * batch_size, len(rows))
             batch = rows[batch_start:batch_end]
             logger.info(f"Writing records {batch_start} through {batch_end} of {len(rows)} rows to Dolt")
-            self._write_batch(table, batch, on_duplicate_key_update)
+            self._write_batch(db_table, batch, on_duplicate_key_update)
 
         if commit:
-            return self.commit_tables(commit_message, table_name, allow_empty)
+            return self.commit_tables(commit_message, table, allow_empty)
 
     @classmethod
     def _coerce_dates(cls, data: Iterable[dict]) -> List[dict]:
@@ -309,12 +381,30 @@ class DoltSQLContext:
             conn.execute(statement)
 
     def read_columns(self, table: str, as_of: Optional[str] = None) -> Mapping[str, list]:
+        """
+        Read the contents of a table formatted into columns, optionally `AS OF` a commit, commit ref, or date.
+        :param table: the table to read.
+        :param as_of: a commit, commit ref, or date.
+        :return: `Mapping[str, list]` mapping column names to lists of values.
+        """
         return self.read_columns_sql(self._get_read_table_asof_query(table, as_of))
 
     def read_rows(self, table: str, as_of: Optional[str] = None) -> List[dict]:
+        """
+        Read the contents of a table formatted into rows, optionally `AS OF` a commit, commit ref, or date.
+        :param table: the table to read.
+        :param as_of: a commit, commit ref, or date.
+        :return: `List[dict]`, each `dict` representing a row.
+        """
         return self.read_rows_sql(self._get_read_table_asof_query(table, as_of))
 
     def read_pandas(self, table: str, as_of: Optional[str] = None) -> pd.DataFrame:
+        """
+        Read the contents of a table formatted as a `pandas.DataFrame`, optionally `AS OF` a commit, commit ref, or date.
+        :param table: the table to read.
+        :param as_of: a commit, commit ref, or date.
+        :return: `pd.DataFrame` representing the table.
+        """
         return self.read_pandas_sql(self._get_read_table_asof_query(table, as_of))
 
     @classmethod
@@ -323,14 +413,29 @@ class DoltSQLContext:
         return f'{base_query} AS OF "{as_of}"' if as_of else base_query
 
     def read_columns_sql(self, sql: str) -> Mapping[str, list]:
+        """
+        Execute a SQL query and format the result as a mapping of columns to lists of values.
+        :param sql: the SQL query to execute.
+        :return: `Mapping[str, list]` representing the return value mapping columns to lists of values..
+        """
         rows = self._read_table_sql(sql)
         columns = rows_to_columns(rows)
         return columns
 
     def read_rows_sql(self, sql: str) -> List[dict]:
+        """
+        Execute a SQL query and format the result as a list of rows, each represented by a `dict`.
+        :param sql: the SQL query to execute.
+        :return: `List[dict]` representing the return value mapping as list of `dict`, one for each row.
+        """
         return self._read_table_sql(sql)
 
     def read_pandas_sql(self, sql: str) -> pd.DataFrame:
+        """
+        Execute a SQL query and format the result as `pandas.DataFrame`.
+        :param sql: the SQL query to execute.
+        :return: `pd.DataFrame` representing the return value mapping as list of `dict`, one for each row.
+        """
         with self.engine.connect() as conn:
             return pd.read_sql(sql, conn)
 
@@ -340,6 +445,10 @@ class DoltSQLContext:
             return [dict(row) for row in result]
 
     def log(self) -> OrderedDict:
+        """
+        Read the `dolt_log` table and use the results to populate `DoltCommit` objects.
+        :return: `OrderedDict` mapping commit hashes to `DoltCommit` objects, ordered by creation timestamp.
+        """
         query = f"""
             SELECT
                 dc.`commit_hash`,
@@ -376,11 +485,19 @@ class DoltSQLContext:
 
             return commits
 
-    # TODO
-    #  we likely want to support committish semantics here, i.e. anything that can resolve to a commit
     def diff(
         self, from_commit: str, to_commit: str, table_or_tables: Union[str, List[str]]
     ) -> Mapping[str, pd.DataFrame]:
+        """
+        Uses Dolt's `dolt_diff_<table>` system tables to return diffs between to arbitrary commits.
+
+        # TODO:
+        #   we likely want to support committish semantics here, i.e. anything that can resolve to a commit
+        :param from_commit: first commit.
+        :param to_commit: second commit.
+        :param table_or_tables: optionally specify a table or tables to limit the scope of this diff to.
+        :return:
+        """
         tables = [table_or_tables] if isinstance(table_or_tables, str) else table_or_tables
 
         def get_query(table: str) -> str:
@@ -436,12 +553,9 @@ class DoltSQLServerContext(DoltSQLContext):
 
     def start_server(self):
         """
-        Start a MySQL Server process on local host using the parameters to configure behavior. The parameters are
-        self-explanatory, but the config is a way to provide them as a YAML file rather than as function
-        arguments.
+        Start a Dolt SQL Server process. The configurations are read from `self.server_config`.
         :return:
         """
-
         def inner(server_args):
             if self.server is not None:
                 logger.warning("Server already running")
@@ -485,7 +599,7 @@ class DoltSQLServerContext(DoltSQLContext):
 
     def stop_server(self):
         """
-        Stop the MySQL Server process this repo is running.
+        Stop the MySQL Server process referenced in `self.server`.
         :return:
         """
         if self.server is None:
